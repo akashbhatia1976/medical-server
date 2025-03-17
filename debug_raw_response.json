@@ -1,0 +1,35 @@
+{
+    "id": "chatcmpl-AvLcn3rENWQaAb2wSA3ffXJOResPN",
+    "object": "chat.completion",
+    "created": 1738231185,
+    "model": "gpt-3.5-turbo-0125",
+    "choices": [
+        {
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "{\n  \"categories\": [\n    \"Patient Information\",\n    \"Medical Parameters\"\n  ],\n  \"parameters\": {\n    \"Patient Information\": {\n      \"Address\": \"1303B Bianca Apartments, Ashok Chopra Road, Versova, Mumbai 400061\",\n      \"Patient Name\": \"Akash Bhatia\",\n      \"Date\": \"Jan 19, 2025\"\n    },\n    \"Medical Parameters\": {\n      \"Complete Blood Count\": {\n        \"Haemoglobin\": {\n          \"Value\": \"13.0\",\n          \"Reference Range\": \"12.0 \u2014 15.0\",\n          \"Unit\": \"g/dl\"\n        },\n        \"RBC\": {\n          \"Value\": \"4.2\",\n          \"Reference Range\": \"3.8 \u2014 4.8\",\n          \"Unit\": \"mil/cmm\"\n        },\n        \"PCV\": {\n          \"Value\": \"38.5\",\n          \"Reference Range\": \"36-46\",\n          \"Unit\": \"%\"\n        },\n        \"MCV\": {\n          \"Value\": \"87.6\",\n          \"Reference Range\": \"81 \u2014 101\",\n          \"Unit\": \"fl\"\n        },\n        \"WBC Total Count\": {\n          \"Value\": \"5820\",\n          \"Reference Range\": \"4000 \u2014\",\n          \"Unit\": \"Unknown\"\n        }\n      }\n    }\n  }\n}",
+                "refusal": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop"
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 420,
+        "completion_tokens": 289,
+        "total_tokens": 709,
+        "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0
+        }
+    },
+    "service_tier": "default",
+    "system_fingerprint": null
+}

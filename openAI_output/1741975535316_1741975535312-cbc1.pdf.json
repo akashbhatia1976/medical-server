@@ -1,0 +1,216 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "parameters": {
+        "Patient Information": {
+            "Name": "MRS.NAKSHATRA REDDY",
+            "Age": "77 Years",
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "CBC (Complete Blood Count)": {
+                "Haemoglobin": {
+                    "Value": "6.1",
+                    "Reference Range": "12.0-15.0",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": "2.07",
+                    "Reference Range": "3.8-4.8",
+                    "Unit": "mil/cmm"
+                },
+                "PCV": {
+                    "Value": "18.0",
+                    "Reference Range": "36-46",
+                    "Unit": "%"
+                },
+                "MCV": {
+                    "Value": "87.2",
+                    "Reference Range": "80-100",
+                    "Unit": "fl"
+                },
+                "MCH": {
+                    "Value": "29.7",
+                    "Reference Range": "27-32",
+                    "Unit": "pg"
+                },
+                "MCHC": {
+                    "Value": "34.1",
+                    "Reference Range": "31.5-34.5",
+                    "Unit": "g/dL"
+                },
+                "RDW": {
+                    "Value": "13.3",
+                    "Reference Range": "11.6-14.0",
+                    "Unit": "%"
+                },
+                "WBC Total Count": {
+                    "Value": "2530",
+                    "Reference Range": "4000-10000",
+                    "Unit": "/cmm"
+                },
+                "Platelet Count": {
+                    "Value": "75000",
+                    "Reference Range": "150000-400000",
+                    "Unit": "/cmm"
+                }
+            },
+            "Kidney Function Tests": {
+                "BLOOD UREA, Serum": {
+                    "Value": "40.1",
+                    "Reference Range": "17.1-49.3",
+                    "Unit": "mg/dl"
+                },
+                "BUN, Serum": {
+                    "Value": "18.7",
+                    "Reference Range": "8-23",
+                    "Unit": "mg/dl"
+                },
+                "CREATININE, Serum": {
+                    "Value": "1.29",
+                    "Reference Range": "0.51-0.95",
+                    "Unit": "mg/dl"
+                },
+                "eGFR, Serum": {
+                    "Value": "40",
+                    "Reference Range": "Above 90",
+                    "Unit": "(ml/min/1.73sqm)"
+                }
+            },
+            "Liver Function Tests": {
+                "BILIRUBIN (TOTAL), Serum": {
+                    "Value": "0.91",
+                    "Reference Range": "0.1-1.2",
+                    "Unit": "mg/dl"
+                },
+                "BILIRUBIN (DIRECT), Serum": {
+                    "Value": "0.65",
+                    "Reference Range": "0-0.3",
+                    "Unit": "mg/dl"
+                },
+                "BILIRUBIN (INDIRECT), Serum": {
+                    "Value": "0.26",
+                    "Reference Range": "0.1-1.0",
+                    "Unit": "mg/dl"
+                },
+                "SGOT (AST), Serum": {
+                    "Value": "27.5",
+                    "Reference Range": "5-32",
+                    "Unit": "U/L"
+                },
+                "SGPT (ALT), Serum": {
+                    "Value": "10.0",
+                    "Reference Range": "5-33",
+                    "Unit": "U/L"
+                },
+                "GAMMA GT, Serum": {
+                    "Value": "39.4",
+                    "Reference Range": "3-40",
+                    "Unit": "U/L"
+                },
+                "ALKALINE PHOSPHATASE, Serum": {
+                    "Value": "55.7",
+                    "Reference Range": "35-105",
+                    "Unit": "U/L"
+                }
+            },
+            "CRP-QUANTITATIVE TEST": {
+                "CRP-QUANTITATIVE, Serum": {
+                    "Value": "0.3",
+                    "Reference Range": "1-5",
+                    "Unit": "mg/l"
+                }
+            },
+            "NT-proBNP": {
+                "NT-proBNP, Serum": {
+                    "Value": "308",
+                    "Reference Range": "<450",
+                    "Unit": "pg/ml"
+                }
+            },
+            "Iron Studies": {
+                "IRON, Serum": {
+                    "Value": "218.0",
+                    "Reference Range": "50-170",
+                    "Unit": "ug/dL"
+                },
+                "UIBC (measured), Serum": {
+                    "Value": "170.9",
+                    "Reference Range": "135-392",
+                    "Unit": "ug/dL"
+                },
+                "TOTAL IRON BINDING CAPACITY (TIBC), Serum": {
+                    "Value": "388.9",
+                    "Reference Range": "250-425",
+                    "Unit": "ug/dL"
+                },
+                "TRANSFERRIN, Serum": {
+                    "Value": "302.4",
+                    "Reference Range": "250-380",
+                    "Unit": "mg/dl"
+                },
+                "TRANSFERRIN SATURATION, Serum": {
+                    "Value": "51.1",
+                    "Reference Range": "15-45",
+                    "Unit": "%"
+                },
+                "FERRITIN, Serum": {
+                    "Value": "20.6",
+                    "Reference Range": "10-291",
+                    "Unit": "ng/ml"
+                }
+            },
+            "Ionised Calcium": {
+                "IONISED CALCIUM, Serum": {
+                    "Value": "1.02",
+                    "Reference Range": "Adult: 1.15-1.35, Neonates: 1.10-1.40",
+                    "Unit": "mmol/L"
+                }
+            },
+            "Other Tests": {
+                "URIC ACID, Serum": {
+                    "Value": "6.2",
+                    "Reference Range": "2.4-5.7",
+                    "Unit": "mg/dl"
+                },
+                "PHOSPHORUS, Serum": {
+                    "Value": "4.3",
+                    "Reference Range": "2.7-4.5",
+                    "Unit": "mg/dl"
+                },
+                "CALCIUM, Serum": {
+                    "Value": "8.6",
+                    "Reference Range": "8.8-10.2",
+                    "Unit": "mg/dl"
+                },
+                "SODIUM, Serum": {
+                    "Value": "135",
+                    "Reference Range": "135-148",
+                    "Unit": "mmol/l"
+                },
+                "POTASSIUM, Serum": {
+                    "Value": "4.8",
+                    "Reference Range": "3.5-5.3",
+                    "Unit": "mmol/l"
+                },
+                "CHLORIDE, Serum": {
+                    "Value": "105",
+                    "Reference Range": "98-107",
+                    "Unit": "mmol/L"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [
+            "Results rechecked. Kindly correlate clinically and repeat estimation if required.",
+            "CRP elevations are nonspecific and may be useful for the detection of systemic inflammatory processes.",
+            "NT-proBNP is a marker of atrial & ventricular distension due to increased intracardiac pressure."
+        ],
+        "Doctor's Notes": []
+    },
+    "message": "Data extraction completed"
+}

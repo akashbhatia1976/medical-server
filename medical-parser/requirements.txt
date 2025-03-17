@@ -1,0 +1,4 @@
+pymongo
+python-dotenv
+PyPDF2
+pandas

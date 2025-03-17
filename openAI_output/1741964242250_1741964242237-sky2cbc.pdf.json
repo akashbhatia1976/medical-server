@@ -1,0 +1,46 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "parameters": {
+        "Patient Information": {
+            "Name": "Akash Bhatia",
+            "Age": 48,
+            "Date": "Jan 19, 2025"
+        },
+        "Medical Parameters": {
+            "Haemoglobin": {
+                "Value": 13.0,
+                "Reference Range": "12.0 \u2014 15.0",
+                "Unit": "g/dl"
+            },
+            "RBC": {
+                "Value": 4.2,
+                "Reference Range": "3.8 \u2014 4.8",
+                "Unit": "mil/cmm"
+            },
+            "PCV": {
+                "Value": 38.5,
+                "Reference Range": "36-46",
+                "Unit": "%"
+            },
+            "MCV": {
+                "Value": 87.6,
+                "Reference Range": "81 \u2014 101",
+                "Unit": "fl"
+            },
+            "WBC Total Count": {
+                "Value": 5820,
+                "Reference Range": "4000 \u2014 10000",
+                "Unit": "/cmm"
+            }
+        },
+        "Doctor\u2019s Notes": [],
+        "Doctor's Notes": []
+    },
+    "message": "Data extraction completed"
+}

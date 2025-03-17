@@ -1,0 +1,60 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "parameters": {
+        "Patient Information": {
+            "Name": "Jane Smith",
+            "Age": 50,
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "Complete Blood Count": {
+                "Haemoglobin": {
+                    "Value": 10.8,
+                    "Reference Range": "N/A",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": 3.71,
+                    "Reference Range": "N/A",
+                    "Unit": "mil/cmm"
+                },
+                "WBC Total Count": {
+                    "Value": 2920,
+                    "Reference Range": "N/A",
+                    "Unit": "/emm"
+                },
+                "Platelet Count": {
+                    "Value": 62000,
+                    "Reference Range": "N/A",
+                    "Unit": "/emm"
+                }
+            },
+            "Electrolytes": {
+                "Sodium": {
+                    "Value": 133,
+                    "Reference Range": "N/A",
+                    "Unit": "mmol/l"
+                },
+                "Potassium": {
+                    "Value": 3.6,
+                    "Reference Range": "N/A",
+                    "Unit": "mmol/l"
+                },
+                "Chloride": {
+                    "Value": 98,
+                    "Reference Range": "N/A",
+                    "Unit": "mmol/l"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [],
+        "Doctor's Notes": []
+    },
+    "message": "Data extraction completed"
+}

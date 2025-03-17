@@ -1,0 +1,134 @@
+require("dotenv").config(); // Load environment variables
+console.log("Environment Variables Loaded:", process.env); // Debugging log
+
+const express = require("express");
+const http = require("http");
+const bodyParser = require("body-parser");
+const path = require("path");
+const fs = require("fs");
+const multer = require("multer");
+const { connectDB, closeDB, getDB } = require("./db");
+const socketIo = require("socket.io"); // ✅ Import Socket.io
+const cors = require("cors"); // ✅ Import CORS middleware
+
+// ✅ Initialize Express App FIRST
+const app = express();
+const server = http.createServer(app);
+
+// ✅ Add this before defining routes
+app.use(
+  cors({
+    origin: ["http://localhost:3001", "https://myaether.live"], // ✅ Allow frontend URLs
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // ✅ Allow cookies & authentication headers
+  })
+);
+
+// Import route files
+const categoriesRoutes = require("./routes/categoriesRoutes");
+const filesRoutes = require("./routes/filesRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const trendsRoutes = require("./routes/trendsRoutes");
+const analyzeRoutes = require("./routes/analyzeRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+const parametersRoutes = require("./routes/parametersRoutes");
+const usersRoutes = require("./routes/usersRoutes");
+const reportsRoutes = require("./routes/reportsRoutes");
+const shareRoutes = require("./routes/shareRoutes"); // ✅ Import the sharing routes
+
+//const app = express();
+//const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "*", // Change this to your frontend URL in production
+    methods: ["GET", "POST"],
+  },
+});
+
+const PORT = process.env.PORT || 3000;
+
+// ✅ Ensure DB & Collections Exist on Startup
+async function initializeDatabase() {
+  try {
+    await connectDB(); // Ensure the connection and collections are created
+    console.log("✅ Database & Collections Verified.");
+  } catch (err) {
+    console.error("❌ Database initialization error:", err);
+    process.exit(1);
+  }
+}
+
+// Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Multer setup for file uploads
+const upload = multer({ dest: "uploads/" });
+
+// Ensure required directories exist
+["uploads", "processed", "comparison_results"].forEach((dir) => {
+  const dirPath = path.join(__dirname, dir);
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath);
+    console.log(`✅ Created directory: ${dirPath}`);
+  }
+});
+
+// ✅ Register API Routes
+const registeredRoutes = [
+  { path: "/api/categories", handler: categoriesRoutes },
+  { path: "/api/files", handler: filesRoutes },
+  { path: "/api/dashboard", handler: dashboardRoutes },
+  { path: "/api/trends", handler: trendsRoutes },
+  { path: "/api/analyze", handler: analyzeRoutes },
+  { path: "/api/upload", handler: uploadRoutes },
+  { path: "/api/parameters", handler: parametersRoutes },
+  { path: "/api/users", handler: usersRoutes },
+  { path: "/api/reports", handler: reportsRoutes },
+  { path: "/api/share", handler: shareRoutes }, // ✅ New share functionality
+];
+
+registeredRoutes.forEach(({ path, handler }) => {
+  app.use(path, handler);
+  console.log(`✅ Registered route: ${path}`);
+});
+
+// ✅ Setup Socket.io Connection
+io.on("connection", (socket) => {
+  console.log("🟢 A user connected:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("🔴 A user disconnected:", socket.id);
+  });
+});
+
+// ✅ Make Socket.io available across routes
+app.set("socketio", io);
+
+// ✅ Health Check Route
+app.get("/test", (req, res) => {
+  res.json({ message: "✅ Server is running and responding!" });
+});
+
+// ✅ Start the Server After Database Initialization
+initializeDatabase().then(() => {
+  console.log("🚀 Starting Server...");
+  server.listen(PORT, () => {
+    console.log(`✅ Server is running on http://localhost:${PORT}`);
+  });
+});
+
+// ✅ Clean Up & Close Database Connection on Server Exit
+process.on("SIGINT", async () => {
+  await closeDB();
+  console.log("🔴 Database connection closed. Exiting server.");
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  await closeDB();
+  console.log("🔴 Database connection closed. Exiting server.");
+  process.exit(0);
+});
+

@@ -1,0 +1,231 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "parameters": {
+        "Patient Information": {
+            "Name": "MRS.NAKSHATRA REDDY",
+            "Age": "77 Years",
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "CBC (Complete Blood Count)": {
+                "Haemoglobin": {
+                    "Value": "6.1",
+                    "Reference Range": "12.0-15.0",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": "2.07",
+                    "Reference Range": "3.8-4.8",
+                    "Unit": "mil/cmm"
+                },
+                "PCV": {
+                    "Value": "18.0",
+                    "Reference Range": "36-46",
+                    "Unit": "%"
+                },
+                "MCV": {
+                    "Value": "87.2",
+                    "Reference Range": "80-100",
+                    "Unit": "fl"
+                },
+                "MCH": {
+                    "Value": "29.7",
+                    "Reference Range": "27-32",
+                    "Unit": "pg"
+                },
+                "MCHC": {
+                    "Value": "34.1",
+                    "Reference Range": "31.5-34.5",
+                    "Unit": "g/dL"
+                },
+                "RDW": {
+                    "Value": "13.3",
+                    "Reference Range": "11.6-14.0",
+                    "Unit": "%"
+                },
+                "WBC Total Count": {
+                    "Value": "2530",
+                    "Reference Range": "4000-10000",
+                    "Unit": "/cmm"
+                },
+                "Lymphocytes": {
+                    "Value": "31.6",
+                    "Reference Range": "20-40",
+                    "Unit": "%"
+                },
+                "Monocytes": {
+                    "Value": "9.5",
+                    "Reference Range": "2-10",
+                    "Unit": "%"
+                },
+                "Neutrophils": {
+                    "Value": "54.2",
+                    "Reference Range": "40-80",
+                    "Unit": "%"
+                },
+                "Platelet Count": {
+                    "Value": "75000",
+                    "Reference Range": "150000-400000",
+                    "Unit": "/cmm"
+                }
+            },
+            "Kidney Function Tests": {
+                "Blood Urea": {
+                    "Value": "40.1",
+                    "Reference Range": "17.1-49.3",
+                    "Unit": "mg/dl"
+                },
+                "BUN": {
+                    "Value": "18.7",
+                    "Reference Range": "8-23",
+                    "Unit": "mg/dl"
+                },
+                "Creatinine": {
+                    "Value": "1.29",
+                    "Reference Range": "0.51-0.95",
+                    "Unit": "mg/dl"
+                },
+                "eGFR": {
+                    "Value": "40",
+                    "Reference Range": "Normal or High: Above 90",
+                    "Unit": "(ml/min/1.73sqm)"
+                }
+            },
+            "Liver Function Tests": {
+                "Bilirubin (Total)": {
+                    "Value": "0.91",
+                    "Reference Range": "0.1-1.2",
+                    "Unit": "mg/dl"
+                },
+                "Bilirubin (Direct)": {
+                    "Value": "0.65",
+                    "Reference Range": "0-0.3",
+                    "Unit": "mg/dl"
+                },
+                "Bilirubin (Indirect)": {
+                    "Value": "0.26",
+                    "Reference Range": "0.1-1.0",
+                    "Unit": "mg/dl"
+                },
+                "SGOT (AST)": {
+                    "Value": "27.5",
+                    "Reference Range": "5-32",
+                    "Unit": "U/L"
+                },
+                "SGPT (ALT)": {
+                    "Value": "10.0",
+                    "Reference Range": "5-33",
+                    "Unit": "U/L"
+                },
+                "Gamma GT": {
+                    "Value": "39.4",
+                    "Reference Range": "3-40",
+                    "Unit": "U/L"
+                },
+                "Alkaline Phosphatase": {
+                    "Value": "55.7",
+                    "Reference Range": "35-105",
+                    "Unit": "U/L"
+                }
+            },
+            "CRP-Quantitative Test": {
+                "CRP-Quantitative": {
+                    "Value": "0.3",
+                    "Reference Range": "1-5",
+                    "Unit": "mg/l"
+                }
+            },
+            "NT-proBNP": {
+                "NT-proBNP": {
+                    "Value": "308",
+                    "Reference Range": "<450",
+                    "Unit": "pg/ml"
+                }
+            },
+            "Ionised Calcium": {
+                "Ionised Calcium": {
+                    "Value": "1.02",
+                    "Reference Range": "Adult: 1.15-1.35, Neonates: 1.10-1.40",
+                    "Unit": "mmol/L"
+                }
+            },
+            "Iron Studies": {
+                "Iron": {
+                    "Value": "218.0",
+                    "Reference Range": "50-170",
+                    "Unit": "ug/dL"
+                },
+                "UIBC (Measured)": {
+                    "Value": "170.9",
+                    "Reference Range": "135-392",
+                    "Unit": "ug/dL"
+                },
+                "Total Iron Binding Capacity (TIBC)": {
+                    "Value": "388.9",
+                    "Reference Range": "250-425",
+                    "Unit": "ug/dL"
+                },
+                "Transferrin": {
+                    "Value": "302.4",
+                    "Reference Range": "250-380",
+                    "Unit": "mg/dl"
+                },
+                "Transferrin Saturation": {
+                    "Value": "51.1",
+                    "Reference Range": "15-45",
+                    "Unit": "%"
+                },
+                "Ferritin": {
+                    "Value": "20.6",
+                    "Reference Range": "10-291",
+                    "Unit": "ng/ml"
+                }
+            },
+            "Other Tests": {
+                "Uric Acid": {
+                    "Value": "6.2",
+                    "Reference Range": "2.4-5.7",
+                    "Unit": "mg/dl"
+                },
+                "Phosphorus": {
+                    "Value": "4.3",
+                    "Reference Range": "2.7-4.5",
+                    "Unit": "mg/dl"
+                },
+                "Calcium": {
+                    "Value": "8.6",
+                    "Reference Range": "8.8-10.2",
+                    "Unit": "mg/dl"
+                },
+                "Sodium": {
+                    "Value": "135",
+                    "Reference Range": "135-148",
+                    "Unit": "mmol/l"
+                },
+                "Potassium": {
+                    "Value": "4.8",
+                    "Reference Range": "3.5-5.3",
+                    "Unit": "mmol/l"
+                },
+                "Chloride": {
+                    "Value": "105",
+                    "Reference Range": "98-107",
+                    "Unit": "mmol/L"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [
+            "Results rechecked. Kindly correlate clinically and repeat estimation if required.",
+            "CRP elevations are nonspecific and may be useful for the detection of systemic inflammatory processes.",
+            "NT-proBNP is a marker of atrial & ventricular distension due to increased intracardiac pressure."
+        ],
+        "Doctor's Notes": []
+    },
+    "message": "Data extraction completed"
+}

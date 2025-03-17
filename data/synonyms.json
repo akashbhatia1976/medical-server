@@ -1,0 +1,72 @@
+{
+  "CBC (Complete Blood Count)": {
+    "Haemoglobin": ["hb", "hgb", "hemoglobin", "haemoglobin"],
+    "RBC": ["red blood cells", "rbc"],
+    "PCV": ["packed cell volume", "pcv"],
+    "MCV": ["mean corpuscular volume", "mcv"],
+    "MCH": ["mean corpuscular hemoglobin", "mch"],
+    "MCHC": ["mean corpuscular hemoglobin concentration", "mchc"],
+    "RDW": ["red cell distribution width", "rdw"],
+    "WBC Total Count": ["wbc", "white blood cells total count", "wbc total count"],
+    "WBC Differential Counts": {
+        "Lymphocytes": ["lymphocytes (%)", "lymphs"],
+        "Monocytes": ["monocytes (%)", "monos"],
+        "Neutrophils": ["neutrophils (%)", "neuts"],
+        "Eosinophils": ["eosinophils (%)", "eos"],
+        "Basophils": ["basophils (%)", "basos"]
+      }
+    "Platelet Count": ["platelets", "platelet count"],
+    "MPV": ["mean platelet volume", "mpv"],
+    "PDW": ["platelet distribution width", "pdw"],
+    "RBC Morphology": ["rbc morphology"],
+    "WBC Morphology": ["wbc morphology", "white blood cell morphology"]
+  },
+  "Kidney Function Tests": {
+    "BUN": ["blood urea nitrogen", "bun"],
+    "Creatinine": ["creatinine"],
+    "eGFR": ["estimated glomerular filtration rate", "egfr"],
+    "Total Proteins": ["total proteins"],
+    "Albumin": ["albumin"],
+    "Globulin": ["globulin"],
+    "A/G Ratio": ["albumin/globulin ratio", "a/g ratio"],
+    "Uric Acid": ["uric acid"],
+    "Phosphorus": ["phosphorus"],
+    "Calcium": ["calcium"],
+    "Sodium": ["sodium"],
+    "Potassium": ["potassium"],
+    "Chloride": ["chloride"]
+  },
+  "Liver Function Tests": {
+    "Bilirubin Total": ["total bilirubin", "bilirubin"],
+    "Bilirubin Direct": ["direct bilirubin"],
+    "Bilirubin Indirect": ["indirect bilirubin"],
+    "SGOT (AST)": ["ast", "sgot"],
+    "SGPT (ALT)": ["alt", "sgpt"],
+    "Gamma GT": ["ggt", "gamma glutamyl transferase", "gamma gt"],
+    "Alkaline Phosphatase": ["alp", "alkaline phosphatase"]
+  },
+  "Iron Studies": {
+    "Iron": ["iron"],
+    "UIBC": ["unsaturated iron-binding capacity", "uibc"],
+    "TIBC": ["total iron-binding capacity", "tibc"],
+    "Transferrin": ["transferrin"],
+    "Transferrin Saturation": ["transferrin sat", "transferrin saturation"],
+    "Ferritin": ["ferritin"]
+  },
+  "CRP-Quantitative Test": {
+    "CRP-Quantitative, Serum": ["crp quantitative", "crp"]
+  },
+  "Ionised Calcium": {
+    "Ionised Calcium, Serum": ["ionised calcium", "ionized calcium"]
+  },
+  "Testosterone": {
+    "Testosterone": ["total testosterone", "testosterone, serum", "serum testosterone"]
+  },
+  "Vitamin D": {
+    "25-hydroxy Vitamin D": ["vitamin d", "25-oh vitamin d", "vitamin d total"]
+  },
+  "Vitamin B12": {
+    "Vitamin B12": ["vitamin b", "Vitamin B", "Vitamin-B12", "vitamin b12", "vitamin b-12"]
+  }
+}
+

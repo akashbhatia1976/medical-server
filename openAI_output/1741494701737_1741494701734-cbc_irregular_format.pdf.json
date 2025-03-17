@@ -1,0 +1,56 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "parameters": {
+        "Patient Information": {
+            "Name": "John Doe",
+            "Age": 45,
+            "Gender": "Male"
+        },
+        "Medical Parameters": {
+            "Haemoglobin": {
+                "Value": 13.5,
+                "Reference Range": "N/A",
+                "Unit": "g/dL"
+            },
+            "RBC Count": {
+                "Value": 4.2,
+                "Reference Range": "N/A",
+                "Unit": "mil/cmm"
+            },
+            "WBC Total Count": {
+                "Value": 6400,
+                "Reference Range": "N/A",
+                "Unit": "/emm"
+            },
+            "Platelet Count": {
+                "Value": 200000,
+                "Reference Range": "N/A",
+                "Unit": "/emm"
+            },
+            "Creatinine": {
+                "Value": 1.2,
+                "Reference Range": "N/A",
+                "Unit": "mg/dL"
+            },
+            "Urea": {
+                "Value": 32,
+                "Reference Range": "N/A",
+                "Unit": "mg/dL"
+            },
+            "eGFR": {
+                "Value": 75,
+                "Reference Range": "N/A",
+                "Unit": "mL/min/1.73m\u00b2"
+            }
+        },
+        "Doctor\u2019s Notes": [],
+        "Doctor's Notes": []
+    },
+    "message": "Data extraction completed"
+}

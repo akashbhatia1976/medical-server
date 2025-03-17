@@ -1,0 +1,27 @@
+{
+    "Collected Date": ["Collected Date", "Collected"],
+    "Reported Date": ["Reported Date", "Reported"],
+    "Date": ["Date", "DATE"],
+    "Patient Name": ["name", "patient name", "patient's name", "full name"],
+    "Age": ["age", "patient age", "years"],
+    "Hemoglobin": ["Haemoglobin", "hemoglobin", "hb", "hgb"],
+    "Cholesterol": ["cholesterol", "total cholesterol", "ldl", "hdl", "lipid profile"],
+    "Glucose": ["glucose", "blood sugar", "fasting glucose", "random glucose"],
+    "Blood Pressure": ["bp", "blood pressure", "systolic", "diastolic"],
+    "Heart Rate": ["hr", "heart rate", "pulse"],
+    "RBC Parameters": ["rbc parameters", "RBC PARAMETERS"],
+    "RBC": ["rbc", "RBC"],
+    "PCV": ["pcv", "PCV"],
+    "MCV": ["mcv", "MCV"],
+    "WBC": ["wbc", "WBC", "WBC TOTAL COUNT"],
+    "Lymphocytes": ["lymphocytes", "LYMPHOCYTES"],
+    "Absolute Lymphocytes": ["Absolute Lymphocytes", "ABSOLUTE LYMPHOCYTES"],
+    "Neutrophils": ["Neutrophils"],
+    "Absolute Neutrophils": ["Absolute Neutrophils", "ABSOLUTE NEUTROPHILS"],
+    "Eosinophils": ["Eosinophils"],
+    "Absolute Eosinophils": ["Absolute Eosinophils", "ABSOLUTE EOSINOPHILS"],
+    "Basophils": ["Basophils"],
+    "Absolute Basophils": ["Absolute Basophils", "ABSOLUTE BASOPHILS"],
+    "Platelet Count": ["Platelet Count", "Platelets", "PLATELETS"]
+    
+}

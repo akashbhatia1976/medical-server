@@ -1,0 +1,43 @@
+Environment Variables Loaded: {
+  TERM_PROGRAM: 'Apple_Terminal',
+  SHELL: '/bin/zsh',
+  TERM: 'xterm-256color',
+  TMPDIR: '/var/folders/tq/h62cvtts1kz7kyn90txzmbn00000gn/T/',
+  TERM_PROGRAM_VERSION: '455',
+  TERM_SESSION_ID: 'AA4D619B-12E3-4C77-8906-51003CC0AB51',
+  USER: 'akashbhatia',
+  SSH_AUTH_SOCK: '/private/tmp/com.apple.launchd.AGcaLgp2FJ/Listeners',
+  PATH: '/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:/Users/akashbhatia/.nvm/versions/node/v20.18.1/bin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin',
+  LaunchInstanceID: '776B9B8B-69B2-419D-B4E0-7617EC7D3162',
+  __CFBundleIdentifier: 'com.apple.Terminal',
+  PWD: '/Users/akashbhatia/medical-server',
+  XPC_FLAGS: '0x0',
+  XPC_SERVICE_NAME: '0',
+  SHLVL: '1',
+  HOME: '/Users/akashbhatia',
+  LOGNAME: 'akashbhatia',
+  SECURITYSESSIONID: '186b1',
+  OLDPWD: '/Users/akashbhatia',
+  HOMEBREW_PREFIX: '/opt/homebrew',
+  HOMEBREW_CELLAR: '/opt/homebrew/Cellar',
+  HOMEBREW_REPOSITORY: '/opt/homebrew',
+  INFOPATH: '/opt/homebrew/share/info:',
+  NVM_DIR: '/Users/akashbhatia/.nvm',
+  NVM_CD_FLAGS: '-q',
+  NVM_BIN: '/Users/akashbhatia/.nvm/versions/node/v20.18.1/bin',
+  NVM_INC: '/Users/akashbhatia/.nvm/versions/node/v20.18.1/include/node',
+  JAVA_HOME: '/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home',
+  LC_CTYPE: 'UTF-8',
+  _: '/Users/akashbhatia/.nvm/versions/node/v20.18.1/bin/node',
+  __CF_USER_TEXT_ENCODING: '0x1F5:0x0:0x0',
+  PORT: '3000',
+  MONGODB_URI: 'mongodb://localhost:27017/medicalReportsDB',
+  OPENAI_API_KEY: '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'
+}
+OpenAI API initialized successfully.
+OPENAI_API_KEY is loaded successfully.
+Connected to MongoDB
+Connected to MongoDB
+Server is running on http://localhost:3000
+MongoDB connection closed
+Database connection closed. Exiting server.
