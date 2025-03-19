@@ -116,6 +116,10 @@ io.on("connection", (socket) => {
 // ✅ Make Socket.io available across routes
 app.set("socketio", io);
 
+app.get("/", (req, res) => {
+  res.send("🚀 Medical Server is Live!");
+});
+
 // ✅ Health Check Route
 app.get("/test", (req, res) => {
   res.json({ message: "✅ Server is running and responding!" });
