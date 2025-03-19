@@ -11,8 +11,7 @@ const router = express.Router();
 const mongoClient = new MongoClient(process.env.MONGODB_URI);
 const dbName = "medicalReportsDB";
 const usersCollection = "users";
-const reportsCollection = "reports";
-const parametersCollection = "parameters"; // ✅ Store extracted parameters separately
+const reportsCollection = "reports"; // ✅ Store reports separately
 
 // ✅ Ensure uploads directory exists
 const uploadDir = path.join(__dirname, "../uploads");
@@ -106,36 +105,6 @@ router.post("/", upload.single("file"), async (req, res) => {
         { userId },
         { $push: { reports: { reportId, date: new Date(reportDate), fileName: reportData.fileName } } }
       );
-
-      // ✅ Insert Extracted Parameters into `parameters` Collection
-      const healthId = user.healthId || `AETHER-${Math.floor(100000 + Math.random() * 900000)}`; // Ensure user has HealthID
-      const extractedParameters = parsedData.parameters["Medical Parameters"];
-      if (extractedParameters) {
-        const parameterEntries = [];
-
-        for (const [category, tests] of Object.entries(extractedParameters)) {
-          for (const [testName, details] of Object.entries(tests)) {
-            parameterEntries.push({
-              healthId,
-              userId,
-              reportId,
-              category, // ✅ Dynamically assign category
-              testName,
-              value: details.Value ?? null,
-              referenceRange: details["Reference Range"] ?? null,
-              unit: details.Unit ?? null,
-              date: new Date(reportDate),
-            });
-          }
-        }
-
-        if (parameterEntries.length > 0) {
-          await db.collection(parametersCollection).insertMany(parameterEntries);
-          console.log(`✅ Inserted ${parameterEntries.length} parameters into MongoDB.`);
-        } else {
-          console.warn("⚠️ No parameters found to insert.");
-        }
-      }
 
       res.json({ message: "File uploaded and processed successfully.", reportId });
     });

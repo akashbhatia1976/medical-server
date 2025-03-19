@@ -3,14 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Medical Report Analysis Server",
+  "description": "",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
@@ -31,10 +29,5 @@
     "socket.io": "^4.8.1",
     "tesseract.js": "^5.1.1",
     "twilio": "^5.5.0"
-  },
-  "engines": {
-    "node": "18.x"
   }
 }
-
-

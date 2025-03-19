@@ -1,0 +1,173 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "parameters": {
+        "Patient Information": {
+            "Name": "MRS.CHINTA NAKSHATRA REDDY",
+            "Age": "78 Years",
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "CBC (Complete Blood Count)": {
+                "Haemoglobin": {
+                    "Value": "10.3",
+                    "Reference Range": "12.0-15.0",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": "3.52",
+                    "Reference Range": "3.8-4.8",
+                    "Unit": "mil/cmm"
+                },
+                "PCV": {
+                    "Value": "30.5",
+                    "Reference Range": "36-46",
+                    "Unit": "%"
+                },
+                "MCV": {
+                    "Value": "86.6",
+                    "Reference Range": "81-101",
+                    "Unit": "fl"
+                },
+                "MCH": {
+                    "Value": "29.1",
+                    "Reference Range": "27-32",
+                    "Unit": "pg"
+                },
+                "MCHC": {
+                    "Value": "33.6",
+                    "Reference Range": "31.5-34.5",
+                    "Unit": "g/dL"
+                },
+                "RDW": {
+                    "Value": "21.5",
+                    "Reference Range": "11.6-14.0",
+                    "Unit": "%"
+                },
+                "WBC Total Count": {
+                    "Value": "2630",
+                    "Reference Range": "4000-10000",
+                    "Unit": "/cmm"
+                },
+                "Lymphocytes": {
+                    "Value": "33.7",
+                    "Reference Range": "20-40",
+                    "Unit": "%"
+                },
+                "Monocytes": {
+                    "Value": "11.1",
+                    "Reference Range": "2-10",
+                    "Unit": "%"
+                },
+                "Neutrophils": {
+                    "Value": "52.3",
+                    "Reference Range": "40-80",
+                    "Unit": "%"
+                },
+                "Platelet Count": {
+                    "Value": "53000",
+                    "Reference Range": "150000-410000",
+                    "Unit": "/cmm"
+                },
+                "MPV": {
+                    "Value": "7.6",
+                    "Reference Range": "6-11",
+                    "Unit": "fl"
+                },
+                "PDW": {
+                    "Value": "13.0",
+                    "Reference Range": "11-18",
+                    "Unit": "%"
+                }
+            },
+            "Kidney Function Tests": {
+                "Blood Urea": {
+                    "Value": "40.7",
+                    "Reference Range": "19.29-49.28",
+                    "Unit": "mg/dl"
+                },
+                "BUN": {
+                    "Value": "19.0",
+                    "Reference Range": "9.0-23.0",
+                    "Unit": "mg/dl"
+                },
+                "Creatinine": {
+                    "Value": "1.17",
+                    "Reference Range": "0.55-1.02",
+                    "Unit": "mg/dl"
+                },
+                "eGFR": {
+                    "Value": "48",
+                    "Reference Range": "Normal or High: Above 90, Mild decrease: 60-89, Mild to moderate decrease: 45-59, Moderate to severe decrease: 30-44, Severe decrease: 15-29, Kidney failure: <15",
+                    "Unit": "(ml/min/1.73sqm)"
+                },
+                "Total Proteins": {
+                    "Value": "5.9",
+                    "Reference Range": "5.7-8.2",
+                    "Unit": "g/dL"
+                },
+                "Albumin": {
+                    "Value": "3.0",
+                    "Reference Range": "3.2-4.8",
+                    "Unit": "g/dL"
+                },
+                "Globulin": {
+                    "Value": "2.9",
+                    "Reference Range": "2.3-3.5",
+                    "Unit": "g/dL"
+                },
+                "A/G Ratio": {
+                    "Value": "1.0",
+                    "Reference Range": "1-2",
+                    "Unit": "Calculated"
+                },
+                "Uric Acid": {
+                    "Value": "7.2",
+                    "Reference Range": "3.1-7.8",
+                    "Unit": "mg/dl"
+                },
+                "Phosphorus": {
+                    "Value": "2.3",
+                    "Reference Range": "2.4-5.1",
+                    "Unit": "mg/dl"
+                },
+                "Calcium": {
+                    "Value": "10.8",
+                    "Reference Range": "8.7-10.4",
+                    "Unit": "mg/dl"
+                },
+                "Sodium": {
+                    "Value": "138",
+                    "Reference Range": "136-145",
+                    "Unit": "mmol/l"
+                },
+                "Potassium": {
+                    "Value": "4.0",
+                    "Reference Range": "3.5-5.1",
+                    "Unit": "mmol/l"
+                },
+                "Chloride": {
+                    "Value": "99",
+                    "Reference Range": "98-107",
+                    "Unit": "mmol/l"
+                },
+                "Ionised Calcium": {
+                    "Value": "1.51",
+                    "Reference Range": "Adult: 1.15-1.35, Neonates: 1.10-1.40",
+                    "Unit": "mmol/L"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [
+            "Result rechecked.",
+            "Kindly correlate clinically."
+        ],
+        "Doctor's Notes": []
+    },
+    "message": "Data extraction completed"
+}

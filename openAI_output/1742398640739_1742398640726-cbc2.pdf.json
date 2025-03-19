@@ -1,0 +1,101 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "parameters": {
+        "Patient Information": {
+            "Name": "MRS.CHINTA NAKSHATRA REDDY",
+            "Age": "78 Years",
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "CBC (Complete Blood Count)": {
+                "Haemoglobin": {
+                    "Value": "10.8",
+                    "Reference Range": "12.0-15.0",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": "3.71",
+                    "Reference Range": "3.8-4.8",
+                    "Unit": "mil/cmm"
+                },
+                "PCV": {
+                    "Value": "32.5",
+                    "Reference Range": "36-46",
+                    "Unit": "%"
+                },
+                "MCV": {
+                    "Value": "87.6",
+                    "Reference Range": "81-101",
+                    "Unit": "fl"
+                },
+                "MCH": {
+                    "Value": "29.0",
+                    "Reference Range": "27-32",
+                    "Unit": "pg"
+                },
+                "MCHC": {
+                    "Value": "33.1",
+                    "Reference Range": "31.5-34.5",
+                    "Unit": "g/dL"
+                },
+                "RDW": {
+                    "Value": "21.5",
+                    "Reference Range": "11.6-14.0",
+                    "Unit": "%"
+                },
+                "WBC Total Count": {
+                    "Value": "2920",
+                    "Reference Range": "4000-10000",
+                    "Unit": "/cmm"
+                },
+                "Platelet Count": {
+                    "Value": "62000",
+                    "Reference Range": "150000-410000",
+                    "Unit": "/cmm"
+                }
+            },
+            "Calcium": {
+                "CALCIUM, Serum": {
+                    "Value": "12.1",
+                    "Reference Range": "8.7-10.4",
+                    "Unit": "mg/dl"
+                }
+            },
+            "Electrolytes": {
+                "SODIUM, Serum": {
+                    "Value": "133",
+                    "Reference Range": "136-145",
+                    "Unit": "mmol/l"
+                },
+                "POTASSIUM, Serum": {
+                    "Value": "3.6",
+                    "Reference Range": "3.5-5.1",
+                    "Unit": "mmol/l"
+                },
+                "CHLORIDE, Serum": {
+                    "Value": "98",
+                    "Reference Range": "98-107",
+                    "Unit": "mmol/l"
+                }
+            },
+            "Ionised Calcium": {
+                "IONISED CALCIUM, Serum": {
+                    "Value": "1.45",
+                    "Reference Range": "Adult: 1.15-1.35 mmol/L, Neonates: 1.10-1.40 mmol/L",
+                    "Unit": "mmol/L"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [
+            "Bicytopenia"
+        ],
+        "Doctor's Notes": []
+    },
+    "message": "Data extraction completed"
+}

@@ -1,5 +1,6 @@
 require("dotenv").config(); // Load environment variables
 console.log("Environment Variables Loaded:", process.env); // Debugging log
+console.log("🔍 Debug: MONGODB_URI =", process.env.MONGODB_URI); // Debugging log
 
 const express = require("express");
 const http = require("http");
@@ -7,15 +8,15 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
-const { connectDB, closeDB, getDB } = require("./db");
 const socketIo = require("socket.io"); // ✅ Import Socket.io
 const cors = require("cors"); // ✅ Import CORS middleware
+const mongoose = require("mongoose");
 
 // ✅ Initialize Express App FIRST
 const app = express();
 const server = http.createServer(app);
 
-// ✅ Add this before defining routes
+// ✅ Add CORS Middleware
 app.use(
   cors({
     origin: ["http://localhost:3001", "https://myaether.live"], // ✅ Allow frontend URLs
@@ -37,8 +38,6 @@ const usersRoutes = require("./routes/usersRoutes");
 const reportsRoutes = require("./routes/reportsRoutes");
 const shareRoutes = require("./routes/shareRoutes"); // ✅ Import the sharing routes
 
-//const app = express();
-//const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: "*", // Change this to your frontend URL in production
@@ -47,6 +46,17 @@ const io = socketIo(server, {
 });
 
 const PORT = process.env.PORT || 3000;
+
+// ✅ MongoDB Connection
+async function connectDB() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("✅ Connected to MongoDB");
+  } catch (error) {
+    console.error("❌ MongoDB Connection Error:", error);
+    process.exit(1); // Exit process with failure
+  }
+}
 
 // ✅ Ensure DB & Collections Exist on Startup
 async function initializeDatabase() {
@@ -121,13 +131,13 @@ initializeDatabase().then(() => {
 
 // ✅ Clean Up & Close Database Connection on Server Exit
 process.on("SIGINT", async () => {
-  await closeDB();
+  await mongoose.connection.close();
   console.log("🔴 Database connection closed. Exiting server.");
   process.exit(0);
 });
 
 process.on("SIGTERM", async () => {
-  await closeDB();
+  await mongoose.connection.close();
   console.log("🔴 Database connection closed. Exiting server.");
   process.exit(0);
 });
