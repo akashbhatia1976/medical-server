@@ -19,12 +19,25 @@ const server = http.createServer(app);
 // ✅ Add CORS Middleware
 app.use(
   cors({
-    origin: ["http://localhost:3001", "https://myaether.live"], // ✅ Allow frontend URLs
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:3001",              // local frontend dev
+        "https://myaether.live",              // production domain
+        "https://myaether.vercel.app",        // Vercel preview deploys
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // ✅ Allow cookies & authentication headers
+    credentials: true,
   })
 );
+
 
 // Import route files
 const categoriesRoutes = require("./routes/categoriesRoutes");
