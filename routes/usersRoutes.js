@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const twilio = require("twilio");
+const authenticateUser = require("../middleware/authenticateUser");
+
 
 const router = express.Router();
 
@@ -239,6 +241,27 @@ router.delete("/delete/:userId", async (req, res) => {
   } catch (error) {
     console.error("❌ Error deleting user:", error);
     res.status(500).json({ error: "An error occurred while deleting the user." });
+  }
+});
+
+
+// ✅ Get logged-in user info using token
+router.get("/me", authenticateUser, async (req, res) => {
+  try {
+    const user = await User.findOne({ userId: req.user.userId });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      userId: user.userId,
+      healthId: user.healthId,
+      email: user.email,
+    });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
