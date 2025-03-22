@@ -4,7 +4,7 @@ const { Configuration, OpenAIApi } = require("openai");
 require("dotenv").config();
 
 // Future engines can be added here
-enum SupportedAIEngines {
+const SupportedAIEngines {
   OPENAI = "openai",
   CLAUDE = "claude",
   GROK = "grok",
