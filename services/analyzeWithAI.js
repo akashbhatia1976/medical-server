@@ -5,9 +5,9 @@ require("dotenv").config();
 
 // Future engines can be added here
 const SupportedAIEngines = {
-  OPENAI = "openai",
-  CLAUDE = "claude",
-  GROK = "grok",
+  OPENAI: "openai",
+  CLAUDE: "claude",
+  GROK: "grok",
 }
 
 // ✅ Modular AI Engine Selection
