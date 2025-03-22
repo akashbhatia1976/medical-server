@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 
 // MongoDB connection URI - replace with your connection string if needed
-const uri = 'mongodb://localhost:27017'; // Update this if hosted elsewhere
+const uri = process.env.MONGODB_URI; // Update this if hosted elsewhere
 const client = new MongoClient(uri);
 
 // Database name
