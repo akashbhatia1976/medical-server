@@ -20,14 +20,7 @@ const transporter = nodemailer.createTransport({
 
 // ✅ Share a Report with a User
 router.post("/share-report", async (req, res) => {
-  const {
-    ownerId,
-    sharedWith,
-    reportId,
-    permissionType,
-    recipientPhone,
-    relationshipType = "Friend/Family" // Default
-  } = req.body;
+  const { ownerId, sharedWith, reportId, permissionType, recipientPhone } = req.body;
 
   if (!ownerId || !sharedWith || !reportId || !permissionType) {
     return res.status(400).json({ error: "Missing required fields." });
@@ -39,79 +32,60 @@ router.post("/share-report", async (req, res) => {
     const sharedCollection = db.collection(collectionName);
     const io = req.app.get("socketio");
 
-    // ✅ Normalize sharedWithId and sharedWithEmail
-    let sharedWithId = null;
-    let sharedWithEmail = null;
-
+    // ✅ Normalize sharedWith field (email or userId)
+    let standardizedSharedWith = sharedWith;
     const existingUser = await usersCollection.findOne({
-      $or: [{ userId: sharedWith }, { email: sharedWith }],
+      $or: [{ email: sharedWith }, { userId: sharedWith }],
     });
 
     if (existingUser) {
-      sharedWithId = existingUser.userId;
-      sharedWithEmail = existingUser.email;
-    } else {
-      // Not a registered user — use email if it's an email, else store as-is
-      if (sharedWith.includes("@")) {
-        sharedWithEmail = sharedWith;
-      } else {
-        sharedWithId = sharedWith;
-      }
+      standardizedSharedWith = existingUser.email || existingUser.userId;
     }
 
     // ✅ Prevent duplicate shares
-    const existingShare = await sharedCollection.findOne({
-      ownerId,
-      reportId,
-      $or: [
-        { sharedWithId: sharedWithId || null },
-        { sharedWithEmail: sharedWithEmail || null },
-      ],
-    });
+    const existingShare = await sharedCollection.findOne({ ownerId, sharedWith: standardizedSharedWith, reportId });
 
     if (existingShare) {
       return res.status(400).json({ error: "Report already shared with this user." });
     }
 
-    // ✅ Insert share record
+    // ✅ Insert new share record
     const shareRecord = {
       ownerId,
+      sharedWith: standardizedSharedWith,
       reportId,
       permissionType,
-      sharedWithId,
-      sharedWithEmail,
-      relationshipType,
-      recipientPhone,
       sharedAt: new Date(),
     };
 
     await sharedCollection.insertOne(shareRecord);
 
-    // ✅ Send Email Notification
-    if (sharedWithEmail) {
+    // ✅ Send Email Notification (If Email Provided)
+    if (sharedWith.includes("@")) {
       const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: sharedWithEmail,
+        to: sharedWith,
         subject: "A Medical Report Has Been Shared with You",
         html: `
           <p>Dear User,</p>
-          <p><strong>${ownerId}</strong> has shared a medical report with you.</p>
+          <p>A medical report has been shared with you by <strong>${ownerId}</strong>.</p>
           <p>Report ID: <strong>${reportId}</strong></p>
-          <p>Relationship Type: <strong>${relationshipType}</strong></p>
+          <p>Permission Type: <strong>${permissionType}</strong></p>
           <p>You can view this report by logging into the app.</p>
+          <p>Best Regards,<br>Aether Medical App</p>
         `,
       };
       await transporter.sendMail(mailOptions);
     }
 
-    // ✅ Send SMS Notification
+    // ✅ Send SMS Notification (If Phone Number Provided)
     if (recipientPhone) {
       const smsMessage = `📢 ${ownerId} has shared a medical report with you! Report ID: ${reportId}. Check the Aether app for details.`;
       await sendSMS(recipientPhone, smsMessage);
     }
 
-    // ✅ Emit In-App Notification
-    io.emit("report-shared", { ownerId, sharedWithId, sharedWithEmail, reportId, permissionType });
+    // ✅ Send In-App Notification
+    io.emit("report-shared", { ownerId, sharedWith: standardizedSharedWith, reportId, permissionType });
 
     res.json({ message: "Report shared successfully! Email, SMS & In-App Notification sent." });
   } catch (error) {
@@ -120,7 +94,7 @@ router.post("/share-report", async (req, res) => {
   }
 });
 
-// ✅ Get Reports Shared WITH User
+// ✅ Fetch Reports Shared **WITH** a User (Now Includes Full Report Details)
 router.get("/shared-with/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
@@ -128,71 +102,72 @@ router.get("/shared-with/:userId", async (req, res) => {
     const sharedCollection = db.collection(collectionName);
     const reportsCollection = db.collection(reportsCollectionName);
 
-    const user = await db.collection(usersCollectionName).findOne({ userId });
+    console.log("🔍 Fetching shared reports for:", userId);
 
+    // ✅ Fetch only explicitly shared reports
     const sharedReports = await sharedCollection
-      .find({
-        $or: [
-          { sharedWithId: userId },
-          ...(user?.email ? [{ sharedWithEmail: user.email }] : []),
-        ],
-      })
+      .find({ sharedWith: { $regex: new RegExp(`^${userId}$`, "i") } })
       .toArray();
 
     if (!sharedReports.length) {
       return res.status(200).json({ sharedReports: [] });
     }
 
+    // ✅ Fetch full report details for shared report IDs
     const reportIds = sharedReports.map((report) => report.reportId);
     const fullReports = await reportsCollection.find({ reportId: { $in: reportIds } }).toArray();
 
-    const merged = sharedReports.map((share) => {
-      const full = fullReports.find((r) => r.reportId === share.reportId);
+    // ✅ Merge shared metadata with full report details
+    const mergedReports = sharedReports.map((sharedReport) => {
+      const fullReport = fullReports.find((report) => report.reportId === sharedReport.reportId);
+
       return {
-        _id: share._id,
-        reportId: share.reportId,
-        ownerId: share.ownerId,
-        permissionType: share.permissionType,
-        sharedAt: share.sharedAt,
-        sharedWithId: share.sharedWithId,
-        sharedWithEmail: share.sharedWithEmail,
-        relationshipType: share.relationshipType || "Unknown",
-        fileName: full?.fileName || "⚠️ Missing File",
-        date: full?.date || share.sharedAt,
-        extractedParameters: full?.extractedParameters || {},
+        _id: sharedReport._id,
+        reportId: sharedReport.reportId,
+        ownerId: sharedReport.ownerId,
+        sharedWith: sharedReport.sharedWith,
+        permissionType: sharedReport.permissionType,
+        sharedAt: sharedReport.sharedAt,
+        fileName: fullReport?.fileName || "⚠️ Missing File",
+        date: fullReport?.date || sharedReport.sharedAt,
+        extractedParameters: fullReport?.extractedParameters || {}
       };
     });
 
-    res.json({ sharedReports: merged });
+    console.log("✅ Processed Shared Reports:", JSON.stringify(mergedReports, null, 2));
+
+    res.json({ sharedReports: mergedReports });
   } catch (error) {
     console.error("❌ Error fetching shared reports:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
 
-// ✅ Get Reports Shared BY User
+// ✅ Fetch Reports **Shared BY** a User
 router.get("/shared-by/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
     const db = getDB();
     const sharedCollection = db.collection(collectionName);
 
-    const sharedReports = await sharedCollection
-      .find({ ownerId: userId })
-      .toArray();
+    console.log("🔍 Fetching reports shared by:", userId);
+
+    const sharedReports = await sharedCollection.find({ ownerId: { $regex: new RegExp(`^${userId}$`, "i") } }).toArray();
+
+    console.log("✅ Found reports shared by user:", sharedReports);
 
     res.json({ sharedReports });
   } catch (error) {
-    console.error("❌ Error fetching shared-by reports:", error);
+    console.error("❌ Error fetching shared reports:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
 
-// ✅ Revoke Access
+// ✅ Revoke Access to a Shared Report
 router.post("/revoke", async (req, res) => {
-  const { ownerId, reportId, sharedWithId, sharedWithEmail } = req.body;
+  const { ownerId, reportId, sharedWith, recipientPhone } = req.body;
 
-  if (!ownerId || !reportId || (!sharedWithId && !sharedWithEmail)) {
+  if (!ownerId || !reportId || !sharedWith) {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
@@ -201,23 +176,31 @@ router.post("/revoke", async (req, res) => {
     const sharedCollection = db.collection(collectionName);
     const io = req.app.get("socketio");
 
-    const result = await sharedCollection.deleteOne({
-      ownerId,
-      reportId,
-      $or: [
-        ...(sharedWithId ? [{ sharedWithId }] : []),
-        ...(sharedWithEmail ? [{ sharedWithEmail }] : []),
-      ],
-    });
+    console.log("🔍 Attempting to revoke access for:", { ownerId, reportId, sharedWith });
+
+    let standardizedSharedWith = sharedWith;
+    if (!sharedWith.includes("@")) {
+      const existingUser = await db.collection(usersCollectionName).findOne({
+        $or: [{ email: sharedWith }, { userId: sharedWith }],
+      });
+
+      if (existingUser) {
+        standardizedSharedWith = existingUser.email || existingUser.userId;
+      }
+    }
+
+    const result = await sharedCollection.deleteOne({ ownerId, reportId, sharedWith: standardizedSharedWith });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "No matching shared report found." });
     }
 
-    io.emit("report-revoked", { ownerId, sharedWithId, sharedWithEmail, reportId });
+    console.log("✅ Report access revoked successfully.");
+    io.emit("report-revoked", { ownerId, sharedWith: standardizedSharedWith, reportId });
+
     res.json({ message: "Access revoked successfully!" });
   } catch (error) {
-    console.error("❌ Error revoking report:", error);
+    console.error("❌ Error revoking access:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
