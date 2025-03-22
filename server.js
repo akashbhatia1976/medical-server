@@ -12,6 +12,8 @@ const socketIo = require("socket.io"); // ✅ Import Socket.io
 const cors = require("cors"); // ✅ Import CORS middleware
 const mongoose = require("mongoose");
 
+
+
 // ✅ Initialize Express App FIRST
 const app = express();
 const server = http.createServer(app);
@@ -50,6 +52,7 @@ const parametersRoutes = require("./routes/parametersRoutes");
 const usersRoutes = require("./routes/usersRoutes");
 const reportsRoutes = require("./routes/reportsRoutes");
 const shareRoutes = require("./routes/shareRoutes"); // ✅ Import the sharing routes
+const aiAnalysisRoutes = require("./routes/aiAnalysisRoutes");
 
 const io = socketIo(server, {
   cors: {
@@ -110,6 +113,7 @@ const registeredRoutes = [
   { path: "/api/users", handler: usersRoutes },
   { path: "/api/reports", handler: reportsRoutes },
   { path: "/api/share", handler: shareRoutes }, // ✅ New share functionality
+  { path: "/api/ai-analysis", handler: aiAnalysisRoutes}
 ];
 
 registeredRoutes.forEach(({ path, handler }) => {
