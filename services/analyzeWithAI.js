@@ -31,6 +31,10 @@ const analyzeWithAI = async ({ promptType, parameters, engine = SupportedAIEngin
 
 // ✅ OpenAI Analysis Function
 const analyzeWithOpenAI = async (promptType, parameters) => {
+  if (!parameters || typeof parameters !== 'object' || Object.keys(parameters).length === 0) {
+    return "⚠️ No parameters were provided for analysis. Please upload a report with extracted values.";
+  }
+
   const formattedInput = Object.entries(parameters).map(([category, values]) => {
     const lineItems = Object.entries(values).map(
       ([key, val]) => `${key}: ${val?.Value || "N/A"} ${val?.Unit || ""}`
@@ -41,7 +45,7 @@ const analyzeWithOpenAI = async (promptType, parameters) => {
   const prompt = `You are a highly skilled medical assistant. Given the following diagnostic test results, provide a clear, structured, and actionable ${promptType} analysis. Focus on potential concerns, patterns, and suggestions for further investigation.\n\n${formattedInput}`;
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o", // ✅ Using GPT-4o
+    model: "gpt-4o",
     messages: [
       { role: "system", content: "You are a helpful and knowledgeable medical assistant." },
       { role: "user", content: prompt },
@@ -51,6 +55,7 @@ const analyzeWithOpenAI = async (promptType, parameters) => {
 
   return completion.choices[0]?.message?.content?.trim() || "⚠️ No analysis returned.";
 };
+
 
 module.exports = {
   analyzeWithAI,
