@@ -1,6 +1,6 @@
 const express = require("express");
 const { getDB } = require("../db");
-const analyzeWithAI = require("../services/analyzeWithAI");
+const { analyzeWithAI } = require("../services/analyzeWithAI");
 const generateAnalysisPrompt = require("../prompts/analysisPrompt");
 
 const router = express.Router();
