@@ -40,6 +40,9 @@ app.use(
   })
 );
 
+// ✅ Handle preflight OPTIONS requests for all routes
+app.options("*", cors());
+
 
 // Import route files
 const categoriesRoutes = require("./routes/categoriesRoutes");

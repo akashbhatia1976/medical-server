@@ -50,11 +50,6 @@ const generateReportId = async (db, userId) => {
   return `report${(reportCount + 1).toString().padStart(3, "0")}`;
 };
 
-// ✅ Handle preflight request
-router.options("/", (req, res) => {
-  res.sendStatus(200);
-});
-
 // ✅ Upload Route
 router.post("/", upload.single("file"), async (req, res) => {
   try {
@@ -94,14 +89,7 @@ router.post("/", upload.single("file"), async (req, res) => {
     pythonProcess.on("close", async (code) => {
       if (code !== 0) return res.status(500).json({ error: "Python script failed." });
 
-      let parsedData;
-      try {
-        const rawOutput = fs.readFileSync(outputFilePath, "utf8");
-        parsedData = JSON.parse(rawOutput);
-      } catch (parseErr) {
-        console.error("❌ Failed to parse OpenAI output:", parseErr);
-        return res.status(500).json({ error: "Failed to parse OpenAI output." });
-      }
+      const parsedData = JSON.parse(fs.readFileSync(outputFilePath, "utf8"));
 
       // ✅ Save extracted report data in `reports` collection
       const reportData = {
