@@ -12,7 +12,7 @@ const mongoClient = new MongoClient(process.env.MONGODB_URI);
 const dbName = "medicalReportsDB";
 const usersCollection = "users";
 const reportsCollection = "reports";
-const parametersCollection = "parameters"; // ✅ Store extracted parameters separately
+const parametersCollection = "parameters";
 
 // ✅ Ensure uploads directory exists
 const uploadDir = path.join(__dirname, "../uploads");
@@ -21,7 +21,7 @@ if (!fs.existsSync(uploadDir)) {
   console.log(`📁 Created uploads directory at: ${uploadDir}`);
 }
 
-// ✅ Multer setup for file uploads
+// ✅ Multer setup
 const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadDir),
@@ -33,29 +33,23 @@ const upload = multer({
   }),
 });
 
-// ✅ Utility: Check if User Exists
-const getUser = async (db, userId) => {
-  return await db.collection(usersCollection).findOne({ userId });
-};
+// ✅ Utilities
+const getUser = async (db, userId) => await db.collection(usersCollection).findOne({ userId });
 
-// ✅ Utility: Create User (if needed)
 const createUser = async (db, userId) => {
   await db.collection(usersCollection).insertOne({ userId, reports: [] });
   console.log(`✅ Auto-created user: ${userId}`);
 };
 
-// ✅ Utility: Generate Next Report ID
 const generateReportId = async (db, userId) => {
-  const reportCount = await db.collection(reportsCollection).countDocuments({ userId });
-  return `report${(reportCount + 1).toString().padStart(3, "0")}`;
+  const count = await db.collection(reportsCollection).countDocuments({ userId });
+  return `report${(count + 1).toString().padStart(3, "0")}`;
 };
 
-// ✅ Handle preflight request
-router.options("/", (req, res) => {
-  res.sendStatus(200);
-});
+// ✅ CORS Preflight
+router.options("/", (req, res) => res.sendStatus(200));
 
-// ✅ Upload Route
+// ✅ Main Upload Route
 router.post("/", upload.single("file"), async (req, res) => {
   try {
     const { userId, reportDate, autoCreateUser } = req.body;
@@ -73,26 +67,41 @@ router.post("/", upload.single("file"), async (req, res) => {
         await createUser(db, userId);
         user = await getUser(db, userId);
       } else {
-        return res.status(404).json({ error: "User not found. Prompt user to create." });
+        return res.status(404).json({ error: "User not found." });
       }
     }
 
-    // ✅ Generate new reportId
     const reportId = await generateReportId(db, userId);
-
-    // ✅ Prepare paths and run Python script
     const outputFilePath = `openAI_output/${Date.now()}_${path.basename(filePath)}.json`;
+
+    console.log("🚀 Starting Python script for file:", filePath);
+
     const pythonProcess = spawn("/Users/akashbhatia/medical-server/venv/bin/python3", [
       "openai_extract_fields_combined.py",
       filePath,
       outputFilePath,
     ]);
 
-    pythonProcess.stdout.on("data", (data) => console.log(`🐍 Python stdout: ${data}`));
-    pythonProcess.stderr.on("data", (data) => console.error(`🐍 Python stderr: ${data}`));
+    // ✅ Catches Python spawn errors
+    pythonProcess.on("error", (err) => {
+      console.error("❌ Python process failed to start:", err);
+      return res.status(500).json({ error: "Python script failed to start." });
+    });
+
+    pythonProcess.stdout.on("data", (data) => {
+      console.log(`🐍 Python stdout: ${data}`);
+    });
+
+    pythonProcess.stderr.on("data", (data) => {
+      console.error(`🐍 Python stderr: ${data}`);
+    });
 
     pythonProcess.on("close", async (code) => {
-      if (code !== 0) return res.status(500).json({ error: "Python script failed." });
+      console.log("📦 Python script finished with code:", code);
+
+      if (code !== 0) {
+        return res.status(500).json({ error: "Python script failed." });
+      }
 
       let parsedData;
       try {
@@ -103,7 +112,6 @@ router.post("/", upload.single("file"), async (req, res) => {
         return res.status(500).json({ error: "Failed to parse OpenAI output." });
       }
 
-      // ✅ Save extracted report data in `reports` collection
       const reportData = {
         userId,
         reportId,
@@ -111,17 +119,25 @@ router.post("/", upload.single("file"), async (req, res) => {
         fileName: path.basename(filePath),
         extractedParameters: parsedData.parameters["Medical Parameters"],
       };
+
       await db.collection(reportsCollection).insertOne(reportData);
 
-      // ✅ Store report reference inside `users` collection
       await db.collection(usersCollection).updateOne(
         { userId },
-        { $push: { reports: { reportId, date: new Date(reportDate), fileName: reportData.fileName } } }
+        {
+          $push: {
+            reports: {
+              reportId,
+              date: new Date(reportDate),
+              fileName: reportData.fileName,
+            },
+          },
+        }
       );
 
-      // ✅ Insert Extracted Parameters into `parameters` Collection
-      const healthId = user.healthId || `AETHER-${Math.floor(100000 + Math.random() * 900000)}`; // Ensure user has HealthID
+      const healthId = user.healthId || `AETHER-${Math.floor(100000 + Math.random() * 900000)}`;
       const extractedParameters = parsedData.parameters["Medical Parameters"];
+
       if (extractedParameters) {
         const parameterEntries = [];
 
@@ -131,7 +147,7 @@ router.post("/", upload.single("file"), async (req, res) => {
               healthId,
               userId,
               reportId,
-              category, // ✅ Dynamically assign category
+              category,
               testName,
               value: details.Value ?? null,
               referenceRange: details["Reference Range"] ?? null,
@@ -153,6 +169,11 @@ router.post("/", upload.single("file"), async (req, res) => {
     });
   } catch (err) {
     console.error("🚨 Error:", err);
+    console.error("🔥 Upload failed at:", {
+      userId: req.body?.userId,
+      reportDate: req.body?.reportDate,
+      filePath: req.file?.path,
+    });
     res.status(500).json({ error: "Internal server error." });
   }
 });
