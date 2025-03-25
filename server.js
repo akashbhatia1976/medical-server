@@ -11,6 +11,7 @@ const multer = require("multer");
 const socketIo = require("socket.io"); // ✅ Import Socket.io
 const cors = require("cors"); // ✅ Import CORS middleware
 const mongoose = require("mongoose");
+const commentsRoutes = require("./routes/commentsRoutes");
 
 
 
@@ -166,4 +167,6 @@ process.on("SIGTERM", async () => {
   console.log("🔴 Database connection closed. Exiting server.");
   process.exit(0);
 });
+
+app.use("/api/comments", commentsRoutes);
 
