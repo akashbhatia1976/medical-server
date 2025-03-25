@@ -1,18 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Install system dependencies (including Tesseract)
-apt-get update && apt-get install -y tesseract-ocr libtesseract-dev libleptonica-dev poppler-utils
+# 📦 Install system-level dependencies
+echo "🔧 Installing Tesseract and required dependencies..."
+sudo apt-get update -y
+sudo apt-get install -y tesseract-ocr libtesseract-dev poppler-utils
 
-# Optional: Confirm it's installed and log the version
-echo "✅ Tesseract installed version:"
-tesseract --version
-
-# Create Python virtual environment
+# 🐍 Create Python virtual environment
 python3 -m venv venv
-
-# Activate and install dependencies
 source venv/bin/activate
+
+# 📦 Install Python dependencies
+echo "🐍 Installing Python packages from requirements.txt..."
 pip install --upgrade pip
 pip install -r requirements.txt
 
-echo "✅ Build complete"
+# ✅ Confirm Tesseract installation
+echo "✅ Tesseract installed version:"
+tesseract --version
