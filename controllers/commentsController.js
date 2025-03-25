@@ -1,9 +1,15 @@
-const { connectDB } = require("../db");  // Import the connectDB function
+const { connectDB } = require("../db"); // Import connectDB from db.js
 
+// Add a new comment to the report
 const addComment = async (req, res) => {
   try {
-    const db = await connectDB();  // Await the connection to ensure the database is connected
+    // Ensure DB connection is established before accessing the collection
+    const db = await connectDB();  // Call connectDB to establish connection
+    if (!db) {
+      return res.status(500).json({ error: "Database connection failed." });
+    }
 
+    // Destructure the request body to extract comment data
     const {
       reportId,
       userId,
@@ -18,6 +24,7 @@ const addComment = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
+    // Create a new comment object
     const newComment = {
       reportId,
       userId,
@@ -29,6 +36,7 @@ const addComment = async (req, res) => {
       createdAt: new Date(),
     };
 
+    // Insert the new comment into the comments collection
     const result = await db.collection("comments").insertOne(newComment);
     res.status(201).json({ message: "Comment added", commentId: result.insertedId });
   } catch (err) {
@@ -37,9 +45,14 @@ const addComment = async (req, res) => {
   }
 };
 
+// Get all comments for a specific report
 const getCommentsByReport = async (req, res) => {
   try {
-    const db = await connectDB();  // Await the connection to ensure the database is connected
+    const db = await connectDB();  // Call connectDB to establish connection
+    if (!db) {
+      return res.status(500).json({ error: "Database connection failed." });
+    }
+
     const reportId = req.params.reportId;
     const comments = await db
       .collection("comments")
@@ -54,9 +67,14 @@ const getCommentsByReport = async (req, res) => {
   }
 };
 
+// Get comments for a specific parameter in the report
 const getCommentsByParameter = async (req, res) => {
   try {
-    const db = await connectDB();  // Await the connection to ensure the database is connected
+    const db = await connectDB();  // Call connectDB to establish connection
+    if (!db) {
+      return res.status(500).json({ error: "Database connection failed." });
+    }
+
     const { reportId, parameterPath } = req.params;
     const comments = await db
       .collection("comments")
@@ -74,6 +92,6 @@ const getCommentsByParameter = async (req, res) => {
 module.exports = {
   addComment,
   getCommentsByReport,
-  getCommentsByParameter
+  getCommentsByParameter,
 };
 
