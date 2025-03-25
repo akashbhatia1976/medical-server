@@ -16,4 +16,4 @@ pip install -r requirements.txt
 
 # ✅ Confirm Tesseract installation
 echo "✅ Tesseract installed version:"
-tesseract --version
+#tesseract --version
