@@ -1,11 +1,18 @@
 #!/bin/bash
 
-# Install Tesseract OCR
-apt-get update && apt-get install -y tesseract-ocr
+# Install system dependencies (including Tesseract)
+apt-get update && apt-get install -y tesseract-ocr libtesseract-dev libleptonica-dev poppler-utils
 
-# Optional: Install poppler-utils (for pdf2image if needed)
-apt-get install -y poppler-utils
+# Optional: Confirm it's installed and log the version
+echo "✅ Tesseract installed version:"
+tesseract --version
 
-# Install Node & Python dependencies
-npm install
+# Create Python virtual environment
+python3 -m venv venv
+
+# Activate and install dependencies
+source venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
+
+echo "✅ Build complete"
