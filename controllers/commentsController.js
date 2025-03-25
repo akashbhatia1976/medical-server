@@ -1,8 +1,8 @@
-const { connectDB } = require("../db");  // Import connectDB to ensure DB connection
+const { connectDB } = require("../db");  // Import the connectDB function
 
 const addComment = async (req, res) => {
   try {
-    const db = await connectDB();  // Establish connection and get the DB instance
+    const db = await connectDB();  // Await the connection to ensure the database is connected
 
     const {
       reportId,
@@ -39,7 +39,7 @@ const addComment = async (req, res) => {
 
 const getCommentsByReport = async (req, res) => {
   try {
-    const db = await connectDB();  // Establish connection and get the DB instance
+    const db = await connectDB();  // Await the connection to ensure the database is connected
     const reportId = req.params.reportId;
     const comments = await db
       .collection("comments")
@@ -56,7 +56,7 @@ const getCommentsByReport = async (req, res) => {
 
 const getCommentsByParameter = async (req, res) => {
   try {
-    const db = await connectDB();  // Establish connection and get the DB instance
+    const db = await connectDB();  // Await the connection to ensure the database is connected
     const { reportId, parameterPath } = req.params;
     const comments = await db
       .collection("comments")
