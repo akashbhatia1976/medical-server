@@ -20,7 +20,7 @@ const connectDB = async () => {
     const existingCollections = collections.map(col => col.name);
 
     // Required collections
-    const requiredCollections = ["reports", "users", "parameters", "shared_reports"];
+    const requiredCollections = ["reports", "users", "parameters", "shared_reports", "comments"];
 
     for (const collection of requiredCollections) {
       if (!existingCollections.includes(collection)) {
