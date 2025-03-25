@@ -1,8 +1,9 @@
-const { getDb } = require("../db");
+const { connectDB } = require("../db");  // Import connectDB to ensure DB connection
 
 const addComment = async (req, res) => {
   try {
-    const db = getDb();
+    const db = await connectDB();  // Establish connection and get the DB instance
+
     const {
       reportId,
       userId,
@@ -10,7 +11,7 @@ const addComment = async (req, res) => {
       commenterId,
       commentType,
       parameterPath,
-      text
+      text,
     } = req.body;
 
     if (!reportId || !commenterId || !commentType || !text) {
@@ -25,7 +26,7 @@ const addComment = async (req, res) => {
       commentType,
       parameterPath: commentType === "parameter" ? parameterPath : null,
       text,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
     const result = await db.collection("comments").insertOne(newComment);
@@ -38,7 +39,7 @@ const addComment = async (req, res) => {
 
 const getCommentsByReport = async (req, res) => {
   try {
-    const db = getDb();
+    const db = await connectDB();  // Establish connection and get the DB instance
     const reportId = req.params.reportId;
     const comments = await db
       .collection("comments")
@@ -55,7 +56,7 @@ const getCommentsByReport = async (req, res) => {
 
 const getCommentsByParameter = async (req, res) => {
   try {
-    const db = getDb();
+    const db = await connectDB();  // Establish connection and get the DB instance
     const { reportId, parameterPath } = req.params;
     const comments = await db
       .collection("comments")
@@ -75,3 +76,4 @@ module.exports = {
   getCommentsByReport,
   getCommentsByParameter
 };
+
