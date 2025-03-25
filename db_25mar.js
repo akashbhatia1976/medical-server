@@ -7,19 +7,15 @@ const client = new MongoClient(uri);
 // Database name
 const dbName = 'medicalReportsDB'; // Ensure the correct database name
 
-let db; // Store the DB instance globally
-
 /**
  * Connect to the MongoDB server and ensure necessary collections exist.
  */
 const connectDB = async () => {
   try {
-    if (db) return db;  // If already connected, return the existing instance
-    
     await client.connect();
     console.log('✅ Connected to MongoDB');
-    
-    db = client.db(dbName);
+
+    const db = client.db(dbName);
     const collections = await db.listCollections().toArray();
     const existingCollections = collections.map(col => col.name);
 
@@ -36,10 +32,9 @@ const connectDB = async () => {
     }
 
     console.log('✅ Database initialization complete.');
-    return db;  // Ensure we return the DB instance after connection
   } catch (error) {
     console.error('❌ MongoDB connection failed:', error);
-    throw new Error("Failed to connect to the database.");
+    process.exit(1);
   }
 };
 
@@ -48,12 +43,12 @@ const connectDB = async () => {
  * @returns {Db} MongoDB database instance
  */
 const getDB = () => {
-  if (!db) {
-    throw new Error('Database not connected. Please initialize the connection first.');
-  }
-  return db;
+  return client.db(dbName);
 };
 
+/**
+ * Close the MongoDB connection.
+ */
 const closeDB = async () => {
   try {
     await client.close();
