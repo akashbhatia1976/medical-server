@@ -58,13 +58,20 @@ router.post("/register", async (req, res) => {
     const collection = db.collection(usersCollection);
 
     const existingUser = await collection.findOne({ $or: [{ email }, { phone }, { userId }] });
-    if (existingUser) {
-      const duplicateFields = [];
-      if (existingUser.userId === userId) duplicateFields.push("User ID");
-      if (existingUser.email === email) duplicateFields.push("Email");
-      if (existingUser.phone === phone) duplicateFields.push("Phone");
-      return res.status(400).json({ error: `Already exists: ${duplicateFields.join(", ")}` });
-    }
+    console.log("🧪 Existing user match:", existingUser);
+
+      if (existingUser) {
+        const duplicateFields = [];
+        if (existingUser.userId === userId) duplicateFields.push("User ID");
+        if (existingUser.email === email) duplicateFields.push("Email");
+        if (existingUser.phone === phone) duplicateFields.push("Phone");
+
+        const msg = duplicateFields.length
+          ? `Already exists: ${duplicateFields.join(", ")}`
+          : "User already exists.";
+
+        return res.status(400).json({ error: msg });
+      }
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const healthId = generateHealthID();
@@ -232,6 +239,31 @@ router.delete("/delete/:userId", async (req, res) => {
     res.status(500).json({ error: "Deletion failed." });
   }
 });
+
+// ✅ Check if password reset is required
+router.get("/reset-required/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    await mongoClient.connect();
+    const db = mongoClient.db(dbName);
+    const collection = db.collection(usersCollection);
+
+    const user = await collection.findOne({ userId });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Default to false if field doesn't exist
+    const resetRequired = !!user.resetRequired;
+    return res.json({ resetRequired });
+  } catch (err) {
+    console.error("❌ Error checking reset status:", err);
+    res.status(500).json({ message: "Server error checking reset status." });
+  }
+});
+
 
 module.exports = router;
 
