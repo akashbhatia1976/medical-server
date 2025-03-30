@@ -5,7 +5,7 @@ const multer = require("multer");
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 
 const router = express.Router();
 const mongoClient = new MongoClient(process.env.MONGODB_URI);
@@ -41,18 +41,13 @@ const createUser = async (db, userId) => {
   console.log(`✅ Auto-created user: ${userId}`);
 };
 
-const generateReportId = async (db, userId) => {
-  const count = await db.collection(reportsCollection).countDocuments({ userId });
-  return `report${(count + 1).toString().padStart(3, "0")}`;
-};
-
 // ✅ CORS Preflight
 router.options("/", (req, res) => res.sendStatus(200));
 
 // ✅ Main Upload Route
 router.post("/", upload.single("file"), async (req, res) => {
   try {
-    const { userId, reportDate, autoCreateUser } = req.body;
+    const { userId, reportDate, autoCreateUser, reportName } = req.body;
     const filePath = req.file?.path;
 
     if (!userId || !reportDate || !filePath) {
@@ -71,22 +66,22 @@ router.post("/", upload.single("file"), async (req, res) => {
       }
     }
 
-    const reportId = await generateReportId(db, userId);
     const outputFilePath = `openAI_output/${Date.now()}_${path.basename(filePath)}.json`;
 
     console.log("🚀 Starting Python script for file:", filePath);
 
-    const pythonProcess = spawn("/Users/akashbhatia/medical-server/venv/bin/python3", [
-      "openai_extract_fields_combined.py",
-      filePath,
-      outputFilePath,
-    ]);
+      const pythonProcess = spawn("python3", [
+        "openai_extract_fields_combined.py",
+        filePath,
+        outputFilePath,
+      ]);
 
-    // ✅ Catches Python spawn errors
-    pythonProcess.on("error", (err) => {
-      console.error("❌ Python process failed to start:", err);
-      return res.status(500).json({ error: "Python script failed to start." });
-    });
+
+      pythonProcess.on('error', (err) => {
+        console.error("❌ Python process failed to start:", err);
+        return res.status(500).json({ error: "Python script failed to start." }); // ✅ fixed
+      });
+
 
     pythonProcess.stdout.on("data", (data) => {
       console.log(`🐍 Python stdout: ${data}`);
@@ -112,15 +107,19 @@ router.post("/", upload.single("file"), async (req, res) => {
         return res.status(500).json({ error: "Failed to parse OpenAI output." });
       }
 
+    const topCategory = parsedData?.parameters?.[0]?.category || "Unnamed Report";
+    const fallbackName = `${topCategory} – ${new Date(reportDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
+        
       const reportData = {
         userId,
-        reportId,
         date: new Date(reportDate),
         fileName: path.basename(filePath),
-        extractedParameters: parsedData.parameters["Medical Parameters"],
+        name: reportName?.trim() || fallbackName,
+        extractedParameters: parsedData.parameters,
       };
 
-      await db.collection(reportsCollection).insertOne(reportData);
+      const insertedReport = await db.collection(reportsCollection).insertOne(reportData);
+      const reportId = insertedReport.insertedId; // ✅ MongoDB ObjectId
 
       await db.collection(usersCollection).updateOne(
         { userId },
@@ -130,32 +129,27 @@ router.post("/", upload.single("file"), async (req, res) => {
               reportId,
               date: new Date(reportDate),
               fileName: reportData.fileName,
+              name: reportData.name, // ✅ Include name here too
             },
           },
         }
       );
 
       const healthId = user.healthId || `AETHER-${Math.floor(100000 + Math.random() * 900000)}`;
-      const extractedParameters = parsedData.parameters["Medical Parameters"];
+      const flattenedParameters = parsedData.parameters;
 
-      if (extractedParameters) {
-        const parameterEntries = [];
-
-        for (const [category, tests] of Object.entries(extractedParameters)) {
-          for (const [testName, details] of Object.entries(tests)) {
-            parameterEntries.push({
-              healthId,
-              userId,
-              reportId,
-              category,
-              testName,
-              value: details.Value ?? null,
-              referenceRange: details["Reference Range"] ?? null,
-              unit: details.Unit ?? null,
-              date: new Date(reportDate),
-            });
-          }
-        }
+      if (flattenedParameters) {
+        const parameterEntries = flattenedParameters.map(param => ({
+          healthId,
+          userId,
+          reportId, // ✅ Use ObjectId
+          category: param.category,
+          testName: param.name,
+          value: param.value,
+          referenceRange: param.referenceRange,
+          unit: param.unit,
+          date: new Date(reportDate),
+        }));
 
         if (parameterEntries.length > 0) {
           await db.collection(parametersCollection).insertMany(parameterEntries);
@@ -179,4 +173,5 @@ router.post("/", upload.single("file"), async (req, res) => {
 });
 
 module.exports = router;
+
 
