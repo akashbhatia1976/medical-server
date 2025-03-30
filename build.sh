@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# 📦 Install Python packages to user-specific base path
-export PYTHONUSERBASE=/opt/render/.python-packages
-export PATH=$PYTHONUSERBASE/bin:$PATH
+# ✅ Create virtualenv and activate it
+python3 -m venv venv
+source venv/bin/activate
 
-echo "🐍 Installing Python dependencies from requirements.txt..."
+echo "🐍 Installing Python packages from requirements.txt..."
 pip install --upgrade pip
-pip install --user -r requirements.txt
+pip install -r requirements.txt
 
 echo "📦 Installing Node.js packages..."
 npm install

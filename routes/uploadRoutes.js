@@ -70,7 +70,7 @@ router.post("/", upload.single("file"), async (req, res) => {
 
     console.log("🚀 Starting Python script for file:", filePath);
 
-      const pythonProcess = spawn("python3", [
+      const pythonProcess = spawn('./venv/bin/python3', [
         "openai_extract_fields_combined.py",
         filePath,
         outputFilePath,
