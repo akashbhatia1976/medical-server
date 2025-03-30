@@ -30,10 +30,12 @@ router.post("/share-report", async (req, res) => {
     recipientPhone,
     relationshipType = "Friend/Family" // Default
   } = req.body;
+    
+  const trimmedSharedWith = (sharedWith || "").trim();
 
-  if (!ownerId || !sharedWith || !reportId || !permissionType) {
+  if (!ownerId || !trimmedSharedWith || !reportId || !permissionType) {
     return res.status(400).json({ error: "Missing required fields." });
-  }
+    }
 
   try {
     const db = getDB();
@@ -46,20 +48,20 @@ router.post("/share-report", async (req, res) => {
     let sharedWithEmail = null;
 
     const existingUser = await usersCollection.findOne({
-      $or: [{ userId: sharedWith }, { email: sharedWith }],
-    });
+        $or: [{ userId: trimmedSharedWith }, { email: trimmedSharedWith }],
+      });
 
     if (existingUser) {
       sharedWithId = existingUser.userId;
       sharedWithEmail = existingUser.email;
     } else {
       // Not a registered user — use email if it's an email, else store as-is
-      if (sharedWith.includes("@")) {
-        sharedWithEmail = sharedWith;
-      } else {
-        sharedWithId = sharedWith;
-      }
-    }
+        if (trimmedSharedWith.includes("@")) {
+            sharedWithEmail = trimmedSharedWith;
+          } else {
+            sharedWithId = trimmedSharedWith;
+          }
+        }
 
     // ✅ Prevent duplicate shares
     const existingShare = await sharedCollection.findOne({
