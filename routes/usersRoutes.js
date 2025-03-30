@@ -48,6 +48,7 @@ router.get("/exists/:userId", async (req, res) => {
 // ✅ Register a new user
 router.post("/register", async (req, res) => {
   const { userId, email, phone, password } = req.body;
+
   if (!userId || userId.includes(" ") || !password || password.length < 6 || (!email && !phone)) {
     return res.status(400).json({ error: "Invalid input. Ensure User ID has no spaces, password is 6+ chars, and provide email/phone." });
   }
@@ -57,21 +58,29 @@ router.post("/register", async (req, res) => {
     const db = mongoClient.db(dbName);
     const collection = db.collection(usersCollection);
 
-    const existingUser = await collection.findOne({ $or: [{ email }, { phone }, { userId }] });
+    // ✅ Filter only non-empty conditions
+    const orConditions = [];
+    if (userId) orConditions.push({ userId });
+    if (email) orConditions.push({ email });
+    if (phone) orConditions.push({ phone });
+
+    const existingUser = await collection.findOne({ $or: orConditions });
+
+    console.log("🧪 Checking user with conditions:", orConditions);
     console.log("🧪 Existing user match:", existingUser);
 
-      if (existingUser) {
-        const duplicateFields = [];
-        if (existingUser.userId === userId) duplicateFields.push("User ID");
-        if (existingUser.email === email) duplicateFields.push("Email");
-        if (existingUser.phone === phone) duplicateFields.push("Phone");
+    if (existingUser) {
+      const duplicateFields = [];
+      if (existingUser.userId === userId) duplicateFields.push("User ID");
+      if (existingUser.email === email) duplicateFields.push("Email");
+      if (existingUser.phone === phone) duplicateFields.push("Phone");
 
-        const msg = duplicateFields.length
-          ? `Already exists: ${duplicateFields.join(", ")}`
-          : "User already exists.";
+      const msg = duplicateFields.length
+        ? `Already exists: ${duplicateFields.join(", ")}`
+        : "User already exists.";
 
-        return res.status(400).json({ error: msg });
-      }
+      return res.status(400).json({ error: msg });
+    }
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const healthId = generateHealthID();
@@ -121,6 +130,7 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ error: "Registration failed." });
   }
 });
+
 
 // ✅ Verify email
 router.get("/verify-email", async (req, res) => {
