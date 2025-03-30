@@ -66,108 +66,77 @@ router.post("/", upload.single("file"), async (req, res) => {
       }
     }
 
-    const outputFilePath = `openAI_output/${Date.now()}_${path.basename(filePath)}.json`;
+    const axios = require("axios");
+    const FormData = require("form-data");
 
-    console.log("🚀 Starting Python script for file:", filePath);
+    console.log("🚀 Sending file to analyzer for processing...");
 
-      const pythonProcess = spawn('./venv/bin/python3', [
-        "openai_extract_fields_combined.py",
-        filePath,
-        outputFilePath,
-      ]);
+    const form = new FormData();
+    form.append("file", fs.createReadStream(filePath));
 
-
-      pythonProcess.on('error', (err) => {
-        console.error("❌ Python process failed to start:", err);
-        return res.status(500).json({ error: "Python script failed to start." }); // ✅ fixed
-      });
-
-
-    pythonProcess.stdout.on("data", (data) => {
-      console.log(`🐍 Python stdout: ${data}`);
+    const analyzerRes = await axios.post("https://python-analyzer.onrender.com/analyze", form, {
+      headers: form.getHeaders(),
+      maxBodyLength: Infinity, // To support large PDFs
     });
 
-    pythonProcess.stderr.on("data", (data) => {
-      console.error(`🐍 Python stderr: ${data}`);
-    });
-
-    pythonProcess.on("close", async (code) => {
-      console.log("📦 Python script finished with code:", code);
-
-      if (code !== 0) {
-        return res.status(500).json({ error: "Python script failed." });
-      }
-
-      let parsedData;
-      try {
-        const rawOutput = fs.readFileSync(outputFilePath, "utf8");
-        parsedData = JSON.parse(rawOutput);
-      } catch (parseErr) {
-        console.error("❌ Failed to parse OpenAI output:", parseErr);
-        return res.status(500).json({ error: "Failed to parse OpenAI output." });
-      }
+    const parsedData = analyzerRes.data;
 
     const topCategory = parsedData?.parameters?.[0]?.category || "Unnamed Report";
     const fallbackName = `${topCategory} – ${new Date(reportDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
-        
-      const reportData = {
-        userId,
-        date: new Date(reportDate),
-        fileName: path.basename(filePath),
-        name: reportName?.trim() || fallbackName,
-        extractedParameters: parsedData.parameters,
-      };
 
-      const insertedReport = await db.collection(reportsCollection).insertOne(reportData);
-      const reportId = insertedReport.insertedId; // ✅ MongoDB ObjectId
+    const reportData = {
+      userId,
+      date: new Date(reportDate),
+      fileName: path.basename(filePath),
+      name: reportName?.trim() || fallbackName,
+      extractedParameters: parsedData.parameters,
+    };
 
-      await db.collection(usersCollection).updateOne(
-        { userId },
-        {
-          $push: {
-            reports: {
-              reportId,
-              date: new Date(reportDate),
-              fileName: reportData.fileName,
-              name: reportData.name, // ✅ Include name here too
-            },
+    const insertedReport = await db.collection(reportsCollection).insertOne(reportData);
+    const reportId = insertedReport.insertedId;
+
+    await db.collection(usersCollection).updateOne(
+      { userId },
+      {
+        $push: {
+          reports: {
+            reportId,
+            date: new Date(reportDate),
+            fileName: reportData.fileName,
+            name: reportData.name,
           },
-        }
-      );
-
-      const healthId = user.healthId || `AETHER-${Math.floor(100000 + Math.random() * 900000)}`;
-      const flattenedParameters = parsedData.parameters;
-
-      if (flattenedParameters) {
-        const parameterEntries = flattenedParameters.map(param => ({
-          healthId,
-          userId,
-          reportId, // ✅ Use ObjectId
-          category: param.category,
-          testName: param.name,
-          value: param.value,
-          referenceRange: param.referenceRange,
-          unit: param.unit,
-          date: new Date(reportDate),
-        }));
-
-        if (parameterEntries.length > 0) {
-          await db.collection(parametersCollection).insertMany(parameterEntries);
-          console.log(`✅ Inserted ${parameterEntries.length} parameters into MongoDB.`);
-        } else {
-          console.warn("⚠️ No parameters found to insert.");
-        }
+        },
       }
+    );
 
-      res.json({ message: "File uploaded and processed successfully.", reportId });
-    });
+    const healthId = user.healthId || `AETHER-${Math.floor(100000 + Math.random() * 900000)}`;
+    const flattenedParameters = parsedData.parameters;
+
+    if (flattenedParameters) {
+      const parameterEntries = flattenedParameters.map(param => ({
+        healthId,
+        userId,
+        reportId,
+        category: param.category,
+        testName: param.name,
+        value: param.value,
+        referenceRange: param.referenceRange,
+        unit: param.unit,
+        date: new Date(reportDate),
+      }));
+
+      if (parameterEntries.length > 0) {
+        await db.collection(parametersCollection).insertMany(parameterEntries);
+        console.log(`✅ Inserted ${parameterEntries.length} parameters into MongoDB.`);
+      } else {
+        console.warn("⚠️ No parameters found to insert.");
+      }
+    }
+
+    res.json({ message: "File uploaded and processed successfully.", reportId });
+
   } catch (err) {
     console.error("🚨 Error:", err);
-    console.error("🔥 Upload failed at:", {
-      userId: req.body?.userId,
-      reportDate: req.body?.reportDate,
-      filePath: req.file?.path,
-    });
     res.status(500).json({ error: "Internal server error." });
   }
 });
