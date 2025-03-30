@@ -1,0 +1,403 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "extractedparameters": {
+        "Patient Information": {
+            "Name": "MRS.NAKSHATRA REDDY",
+            "Age": "77 Years",
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "CBC (Complete Blood Count)": {
+                "Haemoglobin": {
+                    "Value": "6.1",
+                    "Reference Range": "12.0-15.0",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": "2.07",
+                    "Reference Range": "3.8-4.8",
+                    "Unit": "mil/cmm"
+                },
+                "PCV": {
+                    "Value": "18.0",
+                    "Reference Range": "36-46",
+                    "Unit": "%"
+                },
+                "MCV": {
+                    "Value": "87.2",
+                    "Reference Range": "80-100",
+                    "Unit": "fl"
+                },
+                "MCH": {
+                    "Value": "29.7",
+                    "Reference Range": "27-32",
+                    "Unit": "pg"
+                },
+                "MCHC": {
+                    "Value": "34.1",
+                    "Reference Range": "31.5-34.5",
+                    "Unit": "g/dL"
+                },
+                "RDW": {
+                    "Value": "13.3",
+                    "Reference Range": "11.6-14.0",
+                    "Unit": "%"
+                },
+                "WBC Total Count": {
+                    "Value": "2530",
+                    "Reference Range": "4000-10000",
+                    "Unit": "/cmm"
+                },
+                "Lymphocytes": {
+                    "Value": "31.6",
+                    "Reference Range": "20-40",
+                    "Unit": "%"
+                },
+                "Monocytes": {
+                    "Value": "9.5",
+                    "Reference Range": "2-10",
+                    "Unit": "%"
+                },
+                "Neutrophils": {
+                    "Value": "54.2",
+                    "Reference Range": "40-80",
+                    "Unit": "%"
+                },
+                "Platelet Count": {
+                    "Value": "75000",
+                    "Reference Range": "150000-400000",
+                    "Unit": "/cmm"
+                }
+            },
+            "Kidney Function Tests": {
+                "Blood Urea": {
+                    "Value": "40.1",
+                    "Reference Range": "17.1-49.3",
+                    "Unit": "mg/dl"
+                },
+                "BUN": {
+                    "Value": "18.7",
+                    "Reference Range": "8-23",
+                    "Unit": "mg/dl"
+                },
+                "Creatinine": {
+                    "Value": "1.29",
+                    "Reference Range": "0.51-0.95",
+                    "Unit": "mg/dl"
+                },
+                "eGFR": {
+                    "Value": "40",
+                    "Reference Range": "Normal or High: Above 90",
+                    "Unit": "(ml/min/1.73sqm)"
+                }
+            },
+            "Liver Function Tests": {
+                "BILIRUBIN (TOTAL)": {
+                    "Value": "0.91",
+                    "Reference Range": "0.1-1.2",
+                    "Unit": "mg/dl"
+                },
+                "BILIRUBIN (DIRECT)": {
+                    "Value": "0.65",
+                    "Reference Range": "0-0.3",
+                    "Unit": "mg/dl"
+                },
+                "BILIRUBIN (INDIRECT)": {
+                    "Value": "0.26",
+                    "Reference Range": "0.1-1.0",
+                    "Unit": "mg/dl"
+                },
+                "SGOT (AST)": {
+                    "Value": "27.5",
+                    "Reference Range": "5-32",
+                    "Unit": "U/L"
+                },
+                "SGPT (ALT)": {
+                    "Value": "10.0",
+                    "Reference Range": "5-33",
+                    "Unit": "U/L"
+                },
+                "ALP (Alkaline Phosphatase)": {
+                    "Value": "55.7",
+                    "Reference Range": "35-105",
+                    "Unit": "U/L"
+                }
+            },
+            "CRP-QUANTITATIVE TEST": {
+                "CRP-QUANTITATIVE": {
+                    "Value": "0.3",
+                    "Reference Range": "1-5",
+                    "Unit": "mg/l"
+                }
+            },
+            "NT-proBNP": {
+                "NT-proBNP": {
+                    "Value": "308",
+                    "Reference Range": "<450",
+                    "Unit": "pg/ml"
+                }
+            },
+            "Ionised Calcium": {
+                "IONISED CALCIUM": {
+                    "Value": "1.02",
+                    "Reference Range": "Adult: 1.15-1.35, Neonates: 1.10-1.40",
+                    "Unit": "mmol/L"
+                }
+            },
+            "Iron Studies": {
+                "IRON": {
+                    "Value": "218.0",
+                    "Reference Range": "50-170",
+                    "Unit": "ug/dL"
+                },
+                "FERRITIN": {
+                    "Value": "20.6",
+                    "Reference Range": "10-291",
+                    "Unit": "ng/ml"
+                }
+            },
+            "Electrolytes": {
+                "Sodium": {
+                    "Value": "135",
+                    "Reference Range": "135-148",
+                    "Unit": "mmol/l"
+                },
+                "Potassium": {
+                    "Value": "4.8",
+                    "Reference Range": "3.5-5.3",
+                    "Unit": "mmol/l"
+                },
+                "Chloride": {
+                    "Value": "105",
+                    "Reference Range": "98-107",
+                    "Unit": "mmol/L"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [
+            "Results rechecked. Kindly correlate clinically and repeat estimation if required.",
+            "CRP elevations are nonspecific and may be useful for the detection of systemic inflammatory processes.",
+            "NT-proBNP is a marker of atrial & ventricular distension due to increased intracardiac pressure."
+        ],
+        "Doctor's Notes": []
+    },
+    "parameters": [
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "Haemoglobin",
+            "value": 6.1,
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.0"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "RBC",
+            "value": 2.07,
+            "unit": "mil/cmm",
+            "referenceRange": "3.8-4.8"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "PCV",
+            "value": 18.0,
+            "unit": "%",
+            "referenceRange": "36-46"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MCV",
+            "value": 87.2,
+            "unit": "fl",
+            "referenceRange": "80-100"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MCH",
+            "value": 29.7,
+            "unit": "pg",
+            "referenceRange": "27-32"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MCHC",
+            "value": 34.1,
+            "unit": "g/dL",
+            "referenceRange": "31.5-34.5"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "RDW",
+            "value": 13.3,
+            "unit": "%",
+            "referenceRange": "11.6-14.0"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "WBC Total Count",
+            "value": 2530.0,
+            "unit": "/cmm",
+            "referenceRange": "4000-10000"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "Lymphocytes",
+            "value": 31.6,
+            "unit": "%",
+            "referenceRange": "20-40"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "Monocytes",
+            "value": 9.5,
+            "unit": "%",
+            "referenceRange": "2-10"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "Neutrophils",
+            "value": 54.2,
+            "unit": "%",
+            "referenceRange": "40-80"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "Platelet Count",
+            "value": 75000.0,
+            "unit": "/cmm",
+            "referenceRange": "150000-400000"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "Blood Urea",
+            "value": 40.1,
+            "unit": "mg/dl",
+            "referenceRange": "17.1-49.3"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "BUN",
+            "value": 18.7,
+            "unit": "mg/dl",
+            "referenceRange": "8-23"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "Creatinine",
+            "value": 1.29,
+            "unit": "mg/dl",
+            "referenceRange": "0.51-0.95"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "eGFR",
+            "value": 40.0,
+            "unit": "(ml/min/1.73sqm)",
+            "referenceRange": "Normal or High: Above 90"
+        },
+        {
+            "category": "Liver Function Tests",
+            "name": "BILIRUBIN (TOTAL)",
+            "value": 0.91,
+            "unit": "mg/dl",
+            "referenceRange": "0.1-1.2"
+        },
+        {
+            "category": "Liver Function Tests",
+            "name": "BILIRUBIN (DIRECT)",
+            "value": 0.65,
+            "unit": "mg/dl",
+            "referenceRange": "0-0.3"
+        },
+        {
+            "category": "Liver Function Tests",
+            "name": "BILIRUBIN (INDIRECT)",
+            "value": 0.26,
+            "unit": "mg/dl",
+            "referenceRange": "0.1-1.0"
+        },
+        {
+            "category": "Liver Function Tests",
+            "name": "SGOT (AST)",
+            "value": 27.5,
+            "unit": "U/L",
+            "referenceRange": "5-32"
+        },
+        {
+            "category": "Liver Function Tests",
+            "name": "SGPT (ALT)",
+            "value": 10.0,
+            "unit": "U/L",
+            "referenceRange": "5-33"
+        },
+        {
+            "category": "Liver Function Tests",
+            "name": "ALP (Alkaline Phosphatase)",
+            "value": 55.7,
+            "unit": "U/L",
+            "referenceRange": "35-105"
+        },
+        {
+            "category": "CRP-QUANTITATIVE TEST",
+            "name": "CRP-QUANTITATIVE",
+            "value": 0.3,
+            "unit": "mg/l",
+            "referenceRange": "1-5"
+        },
+        {
+            "category": "NT-proBNP",
+            "name": "NT-proBNP",
+            "value": 308.0,
+            "unit": "pg/ml",
+            "referenceRange": "<450"
+        },
+        {
+            "category": "Ionised Calcium",
+            "name": "IONISED CALCIUM",
+            "value": 1.02,
+            "unit": "mmol/L",
+            "referenceRange": "Adult: 1.15-1.35, Neonates: 1.10-1.40"
+        },
+        {
+            "category": "Iron Studies",
+            "name": "IRON",
+            "value": 218.0,
+            "unit": "ug/dL",
+            "referenceRange": "50-170"
+        },
+        {
+            "category": "Iron Studies",
+            "name": "FERRITIN",
+            "value": 20.6,
+            "unit": "ng/ml",
+            "referenceRange": "10-291"
+        },
+        {
+            "category": "Electrolytes",
+            "name": "Sodium",
+            "value": 135.0,
+            "unit": "mmol/l",
+            "referenceRange": "135-148"
+        },
+        {
+            "category": "Electrolytes",
+            "name": "Potassium",
+            "value": 4.8,
+            "unit": "mmol/l",
+            "referenceRange": "3.5-5.3"
+        },
+        {
+            "category": "Electrolytes",
+            "name": "Chloride",
+            "value": 105.0,
+            "unit": "mmol/L",
+            "referenceRange": "98-107"
+        }
+    ],
+    "message": "Data extraction completed"
+}

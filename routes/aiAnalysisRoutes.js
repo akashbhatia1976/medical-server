@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { MongoClient } = require("mongodb");
-const { analyzeWithAI, SupportedAIEngines } = require("../services/analyzeWithAI");
-const generateAnalysisPrompt = require("../prompts/analysisPrompt");
+const { MongoClient, ObjectId } = require("mongodb");
+const { analyzeWithAI } = require("../services/analyzeWithAI");
 
 const mongoClient = new MongoClient(process.env.MONGODB_URI);
 
@@ -18,22 +17,31 @@ router.post("/analyze-report", async (req, res) => {
     const client = await mongoClient.connect();
     const db = client.db("medicalReportsDB");
 
-    const report = await db.collection("reports").findOne({ userId, reportId });
+    const reportObjectId = new ObjectId(reportId);
+
+    const report = await db.collection("reports").findOne({
+      userId,
+      _id: reportObjectId,
+    });
 
     if (!report || !report.extractedParameters) {
       return res.status(404).json({ error: "Report or extracted parameters not found" });
     }
 
     const parameters = report.extractedParameters;
+      
+    console.log("📦 Extracted Parameters:", JSON.stringify(parameters, null, 2));
+    console.log("🚀 Calling analyzeWithAI with engine:", model.toLowerCase());
+
 
     const analysis = await analyzeWithAI({
       promptType: "comprehensive",
       parameters,
-      engine: model.toLowerCase(), // "openai", "claude", etc.
+      engine: model.toLowerCase(),
     });
 
     await db.collection("reports").updateOne(
-      { userId, reportId },
+      { _id: reportObjectId },
       {
         $set: {
           aiAnalysis: analysis,

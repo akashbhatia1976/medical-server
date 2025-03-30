@@ -2,10 +2,9 @@ import os
 import json
 import re
 import requests
-import sys
+import tempfile
 from pdf2image import convert_from_path
 import pytesseract
-import tempfile
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -18,38 +17,31 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-# Required Categories
 REQUIRED_CATEGORIES = ["Patient Information", "Medical Parameters", "Doctor's Notes"]
 
-# Log Helper
 def log(message):
     print(message)
 
-# Extract JSON from OpenAI response
 def extract_json_content(content):
-    """Extract valid JSON block from OpenAI's response content."""
     try:
-        content = re.sub(r'```json|```', '', content).strip()  # Remove backticks
+        content = re.sub(r'```json|```', '', content).strip()
         return json.loads(content)
     except json.JSONDecodeError as e:
         log(f"Error decoding JSON: {e}")
         return None
 
-# Function to analyze text using OpenAI
 def analyze_with_openai(text):
-    """Send cleaned text to OpenAI and get structured output."""
     try:
         prompt = (
             "Analyze the following medical report text and extract details into structured JSON. "
-"Ensure the response contains these categories: 'Patient Information', 'Medical Parameters', and 'Doctor’s Notes'. "
-"Do NOT omit any category, even if some data is missing. "
-"Each parameter in 'Medical Parameters' must be structured as an object with fields: 'Value', 'Reference Range', and 'Unit'. "
-"If the reference range is not provided in the report, return 'Reference Range': 'N/A'. "
-"If the unit is not specified, return 'Unit': 'N/A'. "
-"Ensure numerical values are extracted accurately without additional text. "
-"If there are no doctor’s notes, return an empty list: 'Doctor’s Notes': []. "
-"Respond in JSON format ONLY."
-
+            "Ensure the response contains these categories: 'Patient Information', 'Medical Parameters', and 'Doctor’s Notes'. "
+            "Do NOT omit any category, even if some data is missing. "
+            "Each parameter in 'Medical Parameters' must be structured as an object with fields: 'Value', 'Reference Range', and 'Unit'. "
+            "If the reference range is not provided in the report, return 'Reference Range': 'N/A'. "
+            "If the unit is not specified, return 'Unit': 'N/A'. "
+            "Ensure numerical values are extracted accurately without additional text. "
+            "If there are no doctor’s notes, return an empty list: 'Doctor’s Notes': []. "
+            "Respond in JSON format ONLY."
         )
         data = {
             "model": "gpt-3.5-turbo-0125",
@@ -79,9 +71,7 @@ def analyze_with_openai(text):
         log(f"Error analyzing with OpenAI: {e}")
         return None
 
-# Extract text from PDF
 def extract_text_from_pdf(pdf_path):
-    """Extract text from a PDF using OCR."""
     try:
         with tempfile.TemporaryDirectory() as temp_dir:
             images = convert_from_path(pdf_path, output_folder=temp_dir, fmt='png')
@@ -90,56 +80,71 @@ def extract_text_from_pdf(pdf_path):
                 extracted_text += pytesseract.image_to_string(image)
 
         log("Extracted text from PDF:")
-        log(extracted_text[:500])  # Show only first 500 characters for debugging
+        log(extracted_text[:500])
         return extracted_text
     except Exception as e:
         log(f"Error extracting text from PDF: {e}")
         return None
 
-# Ensure required categories exist
+def flatten_parameters(data):
+    flat = []
+    if not isinstance(data, dict):
+        return flat
+
+    for category, params in data.items():
+        if isinstance(params, dict):
+            for name, detail in params.items():
+                if isinstance(detail, dict):
+                    flat.append({
+                        "category": category,
+                        "name": name,
+                        "value": parse_float(detail.get("Value")),
+                        "unit": detail.get("Unit", "N/A"),
+                        "referenceRange": detail.get("Reference Range", "N/A")
+                    })
+    return flat
+
+def parse_float(val):
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return None
+
 def validate_and_fix_response(parsed_response):
-    """Ensure OpenAI response contains all required categories."""
     if not parsed_response:
         return {
             "success": False,
             "categories": [],
-            "parameters": {},
+            "extractedparameters": {},
+            "parameters": [],
             "message": "No data extracted"
         }
-    
-    # Add missing categories
+
     for category in REQUIRED_CATEGORIES:
         if category not in parsed_response:
-            parsed_response[category] = {}
+            parsed_response[category] = {} if category != "Doctor's Notes" else []
 
-    # Convert empty Doctor’s Notes object `{}` into a list `[]`
     if isinstance(parsed_response.get("Doctor's Notes"), dict):
         parsed_response["Doctor's Notes"] = []
+
+    print("Parsed Response:", json.dumps(parsed_response, indent=4))
+
+    medical_params = parsed_response.get("Medical Parameters", {})
+    flat_params = flatten_parameters(medical_params)
 
     return {
         "success": True,
         "categories": list(parsed_response.keys()),
-        "parameters": parsed_response,
+        "extractedparameters": parsed_response,
+        "parameters": flat_params,
         "message": "Data extraction completed"
     }
 
-# Main function
-def main():
-    if len(sys.argv) < 3:
-        print("Usage: python script.py <file_path> <output_file_path>")
-        sys.exit(1)
-
-    input_file_path = sys.argv[1]
-    output_file_path = sys.argv[2]
-
+# ✅ Your new entry point function
+def analyze_pdf(file_path):
     try:
-        if input_file_path.endswith(".pdf"):
-            log("Extracting text from PDF...")
-            input_text = extract_text_from_pdf(input_file_path)
-        else:
-            with open(input_file_path, "r", encoding="utf-8") as file:
-                input_text = file.read()
-
+        log("Extracting text from PDF...")
+        input_text = extract_text_from_pdf(file_path)
         if not input_text:
             raise ValueError("No text extracted from input file.")
 
@@ -148,20 +153,12 @@ def main():
         if not openai_response:
             raise ValueError("Failed to analyze text with OpenAI.")
 
-        # Validate and fix missing categories
         standardized_output = validate_and_fix_response(openai_response)
-
-        # Save output JSON
-        with open(output_file_path, "w", encoding="utf-8") as output_file:
-            json.dump(standardized_output, output_file, indent=4)
-
-        log(f"Output saved to: {output_file_path}")
+        return standardized_output
     except Exception as e:
-        error_file_path = output_file_path.replace(".json", "_error.json")
-        with open(error_file_path, "w", encoding="utf-8") as error_file:
-            json.dump({"error": str(e)}, error_file, indent=4)
-        log(f"Error logged to: {error_file_path}")
-        sys.exit(1)
+        log(f"Unhandled error: {str(e)}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
 
-if __name__ == "__main__":
-    main()

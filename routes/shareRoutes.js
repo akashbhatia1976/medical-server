@@ -9,6 +9,8 @@ const collectionName = "shared_reports";
 const usersCollectionName = "users";
 const reportsCollectionName = "reports"; // Reference to reports collection
 
+
+
 // ✅ Setup Nodemailer Transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -120,34 +122,36 @@ router.post("/share-report", async (req, res) => {
   }
 });
 
-// ✅ Get Reports Shared WITH User
+// ✅ Get Reports Shared WITH User (with full report info)
 router.get("/shared-with/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
     const db = getDB();
     const sharedCollection = db.collection(collectionName);
     const reportsCollection = db.collection(reportsCollectionName);
+    const usersCollection = db.collection(usersCollectionName);
+    const { ObjectId } = require("mongodb");
 
-    const user = await db.collection(usersCollectionName).findOne({ userId });
+    const user = await usersCollection.findOne({ userId });
 
-    const sharedReports = await sharedCollection
-      .find({
-        $or: [
-          { sharedWithId: userId },
-          ...(user?.email ? [{ sharedWithEmail: user.email }] : []),
-        ],
-      })
-      .toArray();
+    const sharedReports = await sharedCollection.find({
+      $or: [
+        { sharedWithId: userId },
+        ...(user?.email ? [{ sharedWithEmail: user.email }] : []),
+      ],
+    }).toArray();
 
     if (!sharedReports.length) {
       return res.status(200).json({ sharedReports: [] });
     }
 
-    const reportIds = sharedReports.map((report) => report.reportId);
-    const fullReports = await reportsCollection.find({ reportId: { $in: reportIds } }).toArray();
+    const reportIds = sharedReports.map((share) => share.reportId);
+    const fullReports = await reportsCollection.find({
+      _id: { $in: reportIds.map((id) => new ObjectId(id)) },
+    }).toArray();
 
     const merged = sharedReports.map((share) => {
-      const full = fullReports.find((r) => r.reportId === share.reportId);
+      const full = fullReports.find((r) => r._id.toString() === share.reportId);
       return {
         _id: share._id,
         reportId: share.reportId,
@@ -157,7 +161,8 @@ router.get("/shared-with/:userId", async (req, res) => {
         sharedWithId: share.sharedWithId,
         sharedWithEmail: share.sharedWithEmail,
         relationshipType: share.relationshipType || "Unknown",
-        fileName: full?.fileName || "⚠️ Missing File",
+        fileName: full?.fileName,
+        name: full?.name,
         date: full?.date || share.sharedAt,
         extractedParameters: full?.extractedParameters || {},
       };
@@ -165,28 +170,57 @@ router.get("/shared-with/:userId", async (req, res) => {
 
     res.json({ sharedReports: merged });
   } catch (error) {
-    console.error("❌ Error fetching shared reports:", error);
+    console.error("❌ Error fetching shared-with reports:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
 
-// ✅ Get Reports Shared BY User
+// ✅ Get Reports Shared BY User (with full report info)
 router.get("/shared-by/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
     const db = getDB();
     const sharedCollection = db.collection(collectionName);
+    const reportsCollection = db.collection(reportsCollectionName);
+    const { ObjectId } = require("mongodb");
 
-    const sharedReports = await sharedCollection
-      .find({ ownerId: userId })
-      .toArray();
+    const sharedReports = await sharedCollection.find({ ownerId: userId }).toArray();
 
-    res.json({ sharedReports });
+    if (!sharedReports.length) {
+      return res.status(200).json({ sharedReports: [] });
+    }
+
+    const reportIds = sharedReports.map((r) => r.reportId);
+    const fullReports = await reportsCollection.find({
+      _id: { $in: reportIds.map((id) => new ObjectId(id)) },
+    }).toArray();
+
+    const merged = sharedReports.map((share) => {
+      const full = fullReports.find((r) => r._id.toString() === share.reportId);
+      return {
+        _id: share._id,
+        reportId: share.reportId,
+        permissionType: share.permissionType,
+        relationshipType: share.relationshipType || "Unknown",
+        sharedWithId: share.sharedWithId,
+        sharedWithEmail: share.sharedWithEmail,
+        recipientPhone: share.recipientPhone,
+        sharedAt: share.sharedAt,
+        name: full?.name,
+        fileName: full?.fileName,
+        date: full?.date,
+        extractedParameters: full?.extractedParameters || {},
+        ownerId: userId,
+      };
+    });
+
+    res.json({ sharedReports: merged });
   } catch (error) {
     console.error("❌ Error fetching shared-by reports:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
 
 // ✅ Revoke Access
 router.post("/revoke", async (req, res) => {
@@ -221,6 +255,93 @@ router.post("/revoke", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
+// ✅ Share All Reports with a User
+router.post("/share-all", async (req, res) => {
+  const { ownerId, sharedWith, permissionType = "view", relationshipType = "Friend/Family" } = req.body;
+
+  if (!ownerId || !sharedWith || !permissionType) {
+    return res.status(400).json({ error: "Missing required fields." });
+  }
+
+  try {
+    const db = await getDB();
+    const reports = await db.collection(reportsCollectionName).find({ userId: ownerId }).toArray();
+
+    if (!reports.length) {
+      return res.status(404).json({ error: "No reports found to share." });
+    }
+
+    // ✅ Normalize sharedWith to ID or email
+    const usersCollection = db.collection(usersCollectionName);
+    let sharedWithId = null;
+    let sharedWithEmail = null;
+
+    const existingUser = await usersCollection.findOne({
+      $or: [{ userId: sharedWith }, { email: sharedWith }],
+    });
+
+    if (existingUser) {
+      sharedWithId = existingUser.userId;
+      sharedWithEmail = existingUser.email;
+    } else {
+      if (sharedWith.includes("@")) {
+        sharedWithEmail = sharedWith;
+      } else {
+        sharedWithId = sharedWith;
+      }
+    }
+
+    // ✅ Create share records
+    const shareEntries = reports.map(report => ({
+      ownerId,
+      reportId: report._id.toString(),
+      permissionType,
+      relationshipType,
+      sharedWithId,
+      sharedWithEmail,
+      sharedAt: new Date(),
+    }));
+
+    const result = await db.collection(collectionName).insertMany(shareEntries);
+
+    // ✅ Optional Email Notification with summary
+    if (sharedWithEmail) {
+      const sharedReportsList = reports
+        .map(r => `• ${r.name || r.fileName || 'Unnamed Report'} (${new Date(r.date).toDateString()})`)
+        .join('<br>');
+
+      const emailBody = `
+        <p>Hello,</p>
+        <p><strong>${ownerId}</strong> has shared all their medical reports with you on <strong>Aether</strong>.</p>
+        <p>You now have access to <strong>${reports.length}</strong> report${reports.length > 1 ? 's' : ''}, including:</p>
+        <p>${sharedReportsList}</p>
+        <p>To view the reports, please log in or sign up at:<br>
+        <a href="https://myaether.live">https://myaether.live</a></p>
+        <p>If you weren’t expecting this, you can ignore this message.</p>
+        <p>Stay healthy,<br>
+        The Aether Health Team</p>
+      `;
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: sharedWithEmail,
+        subject: "Medical Reports Shared with You",
+        html: emailBody,
+      };
+
+      await transporter.sendMail(mailOptions);
+    }
+
+    console.log(`📤 Shared ${result.insertedCount} reports from ${ownerId} to ${sharedWithEmail || sharedWithId}`);
+    res.json({ message: "All reports shared successfully", sharedCount: result.insertedCount });
+
+  } catch (error) {
+    console.error("❌ Error sharing all reports:", error);
+    res.status(500).json({ error: "Failed to share all reports" });
+  }
+});
+
 
 module.exports = router;
 

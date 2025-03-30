@@ -12,6 +12,8 @@ const socketIo = require("socket.io"); // ✅ Import Socket.io
 const cors = require("cors"); // ✅ Import CORS middleware
 const mongoose = require("mongoose");
 const commentsRoutes = require("./routes/commentsRoutes");
+const nlpSearchRoutes = require('./routes/nlpSearchRoutes');
+const { connectDB: connectCustomDB } = require('./db.js');
 
 
 
@@ -19,21 +21,33 @@ const commentsRoutes = require("./routes/commentsRoutes");
 const app = express();
 const server = http.createServer(app);
 
+// Log all incoming headers for debugging
+app.use((req, res, next) => {
+  console.log("🛂 Incoming Request:", req.method, req.originalUrl);
+  console.log("🛂 Headers:", JSON.stringify(req.headers, null, 2));
+  next();
+});
+
+
 // ✅ Add CORS Middleware
 app.use(
   cors({
     origin: function (origin, callback) {
       const allowedOrigins = [
-        "http://localhost:3001",              // local frontend dev
-        "https://myaether.live",              // production domain
-        "https://myaether.vercel.app",        // Vercel preview deploys
+        "http://localhost:3001",
+        "https://myaether.live",
+        "https://myaether.vercel.app",
       ];
 
+      console.log("🛂 CORS Origin received:", origin);
+
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+        console.log("🟢 CORS allowed for origin:", origin);
+        return callback(null, true);
       }
+
+      console.warn("🔴 CORS blocked for origin:", origin);
+      return callback(new Error("Not allowed by CORS"));
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -82,6 +96,8 @@ async function connectDB() {
 async function initializeDatabase() {
   try {
     await connectDB(); // Ensure the connection and collections are created
+      await connectCustomDB(); // ✅ this ensures getDB() works for NLP search
+
     console.log("✅ Database & Collections Verified.");
   } catch (err) {
     console.error("❌ Database initialization error:", err);
@@ -169,4 +185,5 @@ process.on("SIGTERM", async () => {
 });
 
 app.use("/api/comments", commentsRoutes);
+app.use('/api/search/nlp', nlpSearchRoutes);
 

@@ -1,0 +1,111 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "extractedparameters": {
+        "Patient Information": {
+            "Name": "John Doe",
+            "Age": 45,
+            "Gender": "Male"
+        },
+        "Medical Parameters": {
+            "Complete Blood Count": {
+                "Haemoglobin": {
+                    "Value": 13.5,
+                    "Reference Range": "N/A",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": 4.2,
+                    "Reference Range": "N/A",
+                    "Unit": "mil/cemm"
+                },
+                "WBC Total Count": {
+                    "Value": 6400,
+                    "Reference Range": "N/A",
+                    "Unit": "/emm"
+                },
+                "Platelet Count": {
+                    "Value": 200000,
+                    "Reference Range": "N/A",
+                    "Unit": "/cmm"
+                }
+            },
+            "Kidney Function Tests": {
+                "Creatinine": {
+                    "Value": 1.2,
+                    "Reference Range": "N/A",
+                    "Unit": "mg/dL"
+                },
+                "Urea": {
+                    "Value": 32,
+                    "Reference Range": "N/A",
+                    "Unit": "mg/dL"
+                },
+                "eGFR": {
+                    "Value": 75,
+                    "Reference Range": "N/A",
+                    "Unit": "mL/min/1.73m2"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [],
+        "Doctor's Notes": []
+    },
+    "parameters": [
+        {
+            "category": "Complete Blood Count",
+            "name": "Haemoglobin",
+            "value": 13.5,
+            "unit": "g/dL",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Complete Blood Count",
+            "name": "RBC",
+            "value": 4.2,
+            "unit": "mil/cemm",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Complete Blood Count",
+            "name": "WBC Total Count",
+            "value": 6400.0,
+            "unit": "/emm",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Complete Blood Count",
+            "name": "Platelet Count",
+            "value": 200000.0,
+            "unit": "/cmm",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "Creatinine",
+            "value": 1.2,
+            "unit": "mg/dL",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "Urea",
+            "value": 32.0,
+            "unit": "mg/dL",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "eGFR",
+            "value": 75.0,
+            "unit": "mL/min/1.73m2",
+            "referenceRange": "N/A"
+        }
+    ],
+    "message": "Data extraction completed"
+}

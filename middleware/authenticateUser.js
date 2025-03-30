@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const authenticateUser = (req, res, next) => {
   const authHeader = req.headers.authorization;
+  console.log("🔐 Incoming Auth Header:", authHeader); // Add for debugging
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -11,7 +12,7 @@ const authenticateUser = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Will contain { userId: "sky001" } etc.
+    req.user = decoded; // ✅ Store full payload like { userId, iat, exp }
     next();
   } catch (err) {
     console.error("JWT verification failed:", err);
@@ -20,3 +21,4 @@ const authenticateUser = (req, res, next) => {
 };
 
 module.exports = authenticateUser;
+

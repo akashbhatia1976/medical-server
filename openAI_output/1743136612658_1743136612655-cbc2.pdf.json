@@ -1,0 +1,286 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "extractedparameters": {
+        "Patient Information": {
+            "Name": "MRS.CHINTA NAKSHATRA REDDY",
+            "Age": "78 Years",
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "CBC (Complete Blood Count)": {
+                "Haemoglobin": {
+                    "Value": "10.8",
+                    "Reference Range": "12.0-15.0",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": "3.71",
+                    "Reference Range": "3.8-4.8",
+                    "Unit": "mil/cmm"
+                },
+                "PCV": {
+                    "Value": "32.5",
+                    "Reference Range": "36-46",
+                    "Unit": "%"
+                },
+                "MCV": {
+                    "Value": "87.6",
+                    "Reference Range": "81-101",
+                    "Unit": "fl"
+                },
+                "MCH": {
+                    "Value": "29.0",
+                    "Reference Range": "27-32",
+                    "Unit": "pg"
+                },
+                "MCHC": {
+                    "Value": "33.1",
+                    "Reference Range": "31.5-34.5",
+                    "Unit": "g/dL"
+                },
+                "RDW": {
+                    "Value": "21.5",
+                    "Reference Range": "11.6-14.0",
+                    "Unit": "%"
+                },
+                "WBC Total Count": {
+                    "Value": "2920",
+                    "Reference Range": "4000-10000",
+                    "Unit": "/cmm"
+                },
+                "WBC Differential and Absolute Counts": {
+                    "Lymphocytes": {
+                        "Value": "29.0",
+                        "Reference Range": "20-40",
+                        "Unit": "%"
+                    },
+                    "Absolute Lymphocytes": {
+                        "Value": "846.8",
+                        "Reference Range": "1000-3000",
+                        "Unit": "/cmm"
+                    },
+                    "Monocytes": {
+                        "Value": "12.0",
+                        "Reference Range": "2-10",
+                        "Unit": "%"
+                    },
+                    "Absolute Monocytes": {
+                        "Value": "350.4",
+                        "Reference Range": "200-1000",
+                        "Unit": "/cmm"
+                    },
+                    "Neutrophils": {
+                        "Value": "57.0",
+                        "Reference Range": "40-80",
+                        "Unit": "%"
+                    },
+                    "Absolute Neutrophils": {
+                        "Value": "1664.4",
+                        "Reference Range": "2000-7000",
+                        "Unit": "/cmm"
+                    },
+                    "Eosinophils": {
+                        "Value": "2.0",
+                        "Reference Range": "1-6",
+                        "Unit": "%"
+                    },
+                    "Absolute Eosinophils": {
+                        "Value": "58.4",
+                        "Reference Range": "20-500",
+                        "Unit": "/cmm"
+                    },
+                    "Basophils": {
+                        "Value": "0.0",
+                        "Reference Range": "0.1-2",
+                        "Unit": "%"
+                    },
+                    "Absolute Basophils": {
+                        "Value": "0.0",
+                        "Reference Range": "20-100",
+                        "Unit": "/cmm"
+                    }
+                },
+                "Platelet Count": {
+                    "Value": "62000",
+                    "Reference Range": "150000-410000",
+                    "Unit": "/cmm"
+                },
+                "MPV": {
+                    "Value": "8.4",
+                    "Reference Range": "6-11",
+                    "Unit": "fl"
+                },
+                "PDW": {
+                    "Value": "12.7",
+                    "Reference Range": "11-18",
+                    "Unit": "%"
+                }
+            },
+            "Calcium": {
+                "CALCIUM, Serum": {
+                    "Value": "12.1",
+                    "Reference Range": "8.7-10.4",
+                    "Unit": "mg/dl"
+                }
+            },
+            "Electrolytes": {
+                "Sodium": {
+                    "Value": "133",
+                    "Reference Range": "136-145",
+                    "Unit": "mmol/l"
+                },
+                "Potassium": {
+                    "Value": "3.6",
+                    "Reference Range": "3.5-5.1",
+                    "Unit": "mmol/l"
+                },
+                "Chloride": {
+                    "Value": "98",
+                    "Reference Range": "98-107",
+                    "Unit": "mmol/l"
+                }
+            },
+            "Ionised Calcium": {
+                "IONISED CALCIUM, Serum": {
+                    "Value": "1.45",
+                    "Biological Reference Range": {
+                        "Adult": "1.15 - 1.35 mmol/L",
+                        "Neonates": "1.10 - 1.40 mmol/L"
+                    }
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [
+            "Bicytopenia"
+        ],
+        "Doctor's Notes": []
+    },
+    "parameters": [
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "Haemoglobin",
+            "value": 10.8,
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.0"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "RBC",
+            "value": 3.71,
+            "unit": "mil/cmm",
+            "referenceRange": "3.8-4.8"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "PCV",
+            "value": 32.5,
+            "unit": "%",
+            "referenceRange": "36-46"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MCV",
+            "value": 87.6,
+            "unit": "fl",
+            "referenceRange": "81-101"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MCH",
+            "value": 29.0,
+            "unit": "pg",
+            "referenceRange": "27-32"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MCHC",
+            "value": 33.1,
+            "unit": "g/dL",
+            "referenceRange": "31.5-34.5"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "RDW",
+            "value": 21.5,
+            "unit": "%",
+            "referenceRange": "11.6-14.0"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "WBC Total Count",
+            "value": 2920.0,
+            "unit": "/cmm",
+            "referenceRange": "4000-10000"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "WBC Differential and Absolute Counts",
+            "value": null,
+            "unit": "N/A",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "Platelet Count",
+            "value": 62000.0,
+            "unit": "/cmm",
+            "referenceRange": "150000-410000"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MPV",
+            "value": 8.4,
+            "unit": "fl",
+            "referenceRange": "6-11"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "PDW",
+            "value": 12.7,
+            "unit": "%",
+            "referenceRange": "11-18"
+        },
+        {
+            "category": "Calcium",
+            "name": "CALCIUM, Serum",
+            "value": 12.1,
+            "unit": "mg/dl",
+            "referenceRange": "8.7-10.4"
+        },
+        {
+            "category": "Electrolytes",
+            "name": "Sodium",
+            "value": 133.0,
+            "unit": "mmol/l",
+            "referenceRange": "136-145"
+        },
+        {
+            "category": "Electrolytes",
+            "name": "Potassium",
+            "value": 3.6,
+            "unit": "mmol/l",
+            "referenceRange": "3.5-5.1"
+        },
+        {
+            "category": "Electrolytes",
+            "name": "Chloride",
+            "value": 98.0,
+            "unit": "mmol/l",
+            "referenceRange": "98-107"
+        },
+        {
+            "category": "Ionised Calcium",
+            "name": "IONISED CALCIUM, Serum",
+            "value": 1.45,
+            "unit": "N/A",
+            "referenceRange": "N/A"
+        }
+    ],
+    "message": "Data extraction completed"
+}

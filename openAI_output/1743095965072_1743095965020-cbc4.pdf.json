@@ -1,0 +1,336 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "extractedparameters": {
+        "Patient Information": {
+            "Name": "MRS.CHINTA NAKSHATRA REDDY",
+            "Age": "78 Years",
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "CBC (Complete Blood Count)": {
+                "Haemoglobin": {
+                    "Value": "10.5",
+                    "Reference Range": "12.0-15.0",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": "3.59",
+                    "Reference Range": "3.8-4.8",
+                    "Unit": "mil/cmm"
+                },
+                "PCV": {
+                    "Value": "31.7",
+                    "Reference Range": "36-46",
+                    "Unit": "%"
+                },
+                "MCV": {
+                    "Value": "88.4",
+                    "Reference Range": "81-101",
+                    "Unit": "fl"
+                },
+                "MCH": {
+                    "Value": "29.2",
+                    "Reference Range": "27-32",
+                    "Unit": "pg"
+                },
+                "MCHC": {
+                    "Value": "33.1",
+                    "Reference Range": "31.5-34.5",
+                    "Unit": "g/dL"
+                },
+                "RDW": {
+                    "Value": "21.3",
+                    "Reference Range": "11.6-14.0",
+                    "Unit": "%"
+                },
+                "WBC Total Count": {
+                    "Value": "4300",
+                    "Reference Range": "4000-10000",
+                    "Unit": "/cmm"
+                },
+                "Platelet Count": {
+                    "Value": "70000",
+                    "Reference Range": "150000-410000",
+                    "Unit": "/cmm"
+                }
+            },
+            "Kidney Function Tests": {
+                "BLOOD UREA, Serum": {
+                    "Value": "37.8",
+                    "Reference Range": "19.29-49.28",
+                    "Unit": "mg/dl"
+                },
+                "CREATININE, Serum": {
+                    "Value": "1.11",
+                    "Reference Range": "0.55-1.02",
+                    "Unit": "mg/dl"
+                },
+                "eGFR, Serum": {
+                    "Value": "51",
+                    "Reference Range": "N/A",
+                    "Unit": "(ml/min/1.73sqm)"
+                }
+            },
+            "Total Proteins": {
+                "Serum": {
+                    "Value": "5.9",
+                    "Reference Range": "5.7-8.2",
+                    "Unit": "g/dL"
+                }
+            },
+            "Albumin": {
+                "Serum": {
+                    "Value": "3.0",
+                    "Reference Range": "3.2-4.8",
+                    "Unit": "g/dL"
+                }
+            },
+            "Globulin": {
+                "Serum": {
+                    "Value": "2.9",
+                    "Reference Range": "2.3-3.5",
+                    "Unit": "g/dL"
+                }
+            },
+            "A/G Ratio": {
+                "Serum": {
+                    "Value": "1.0",
+                    "Reference Range": "1-2",
+                    "Unit": "N/A"
+                }
+            },
+            "Uric Acid": {
+                "Serum": {
+                    "Value": "5.8",
+                    "Reference Range": "3.1-7.8",
+                    "Unit": "mg/dl"
+                }
+            },
+            "Phosphorus": {
+                "Serum": {
+                    "Value": "2.0",
+                    "Reference Range": "2.4-5.1",
+                    "Unit": "mg/dl"
+                }
+            },
+            "Calcium": {
+                "Serum": {
+                    "Value": "9.2",
+                    "Reference Range": "8.7-10.4",
+                    "Unit": "mg/dl"
+                }
+            },
+            "Sodium": {
+                "Serum": {
+                    "Value": "135",
+                    "Reference Range": "136-145",
+                    "Unit": "mmol/l"
+                }
+            },
+            "Potassium": {
+                "Serum": {
+                    "Value": "3.4",
+                    "Reference Range": "3.5-5.1",
+                    "Unit": "mmol/l"
+                }
+            },
+            "Chloride": {
+                "Serum": {
+                    "Value": "104",
+                    "Reference Range": "98-107",
+                    "Unit": "mmol/L"
+                }
+            },
+            "Ionised Calcium": {
+                "Serum": {
+                    "Value": "1.24",
+                    "Reference Range": "Adult: 1.15-1.35, Neonates: 1.10-1.40",
+                    "Unit": "mmol/l"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [
+            "Anisocytosis ++",
+            "Poikilocytosis Mild",
+            "Polychromasia -",
+            "Target Cells 5",
+            "Basophilic Stippling -",
+            "Normoblasts 5",
+            "Platelets reduced on smear, Few megaplatelet seen on smear.",
+            "Thrombocytopenia.",
+            "Result rechecked.",
+            "Kindly correlate clinically."
+        ],
+        "Doctor's Notes": []
+    },
+    "parameters": [
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "Haemoglobin",
+            "value": 10.5,
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.0"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "RBC",
+            "value": 3.59,
+            "unit": "mil/cmm",
+            "referenceRange": "3.8-4.8"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "PCV",
+            "value": 31.7,
+            "unit": "%",
+            "referenceRange": "36-46"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MCV",
+            "value": 88.4,
+            "unit": "fl",
+            "referenceRange": "81-101"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MCH",
+            "value": 29.2,
+            "unit": "pg",
+            "referenceRange": "27-32"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "MCHC",
+            "value": 33.1,
+            "unit": "g/dL",
+            "referenceRange": "31.5-34.5"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "RDW",
+            "value": 21.3,
+            "unit": "%",
+            "referenceRange": "11.6-14.0"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "WBC Total Count",
+            "value": 4300.0,
+            "unit": "/cmm",
+            "referenceRange": "4000-10000"
+        },
+        {
+            "category": "CBC (Complete Blood Count)",
+            "name": "Platelet Count",
+            "value": 70000.0,
+            "unit": "/cmm",
+            "referenceRange": "150000-410000"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "BLOOD UREA, Serum",
+            "value": 37.8,
+            "unit": "mg/dl",
+            "referenceRange": "19.29-49.28"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "CREATININE, Serum",
+            "value": 1.11,
+            "unit": "mg/dl",
+            "referenceRange": "0.55-1.02"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "eGFR, Serum",
+            "value": 51.0,
+            "unit": "(ml/min/1.73sqm)",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Total Proteins",
+            "name": "Serum",
+            "value": 5.9,
+            "unit": "g/dL",
+            "referenceRange": "5.7-8.2"
+        },
+        {
+            "category": "Albumin",
+            "name": "Serum",
+            "value": 3.0,
+            "unit": "g/dL",
+            "referenceRange": "3.2-4.8"
+        },
+        {
+            "category": "Globulin",
+            "name": "Serum",
+            "value": 2.9,
+            "unit": "g/dL",
+            "referenceRange": "2.3-3.5"
+        },
+        {
+            "category": "A/G Ratio",
+            "name": "Serum",
+            "value": 1.0,
+            "unit": "N/A",
+            "referenceRange": "1-2"
+        },
+        {
+            "category": "Uric Acid",
+            "name": "Serum",
+            "value": 5.8,
+            "unit": "mg/dl",
+            "referenceRange": "3.1-7.8"
+        },
+        {
+            "category": "Phosphorus",
+            "name": "Serum",
+            "value": 2.0,
+            "unit": "mg/dl",
+            "referenceRange": "2.4-5.1"
+        },
+        {
+            "category": "Calcium",
+            "name": "Serum",
+            "value": 9.2,
+            "unit": "mg/dl",
+            "referenceRange": "8.7-10.4"
+        },
+        {
+            "category": "Sodium",
+            "name": "Serum",
+            "value": 135.0,
+            "unit": "mmol/l",
+            "referenceRange": "136-145"
+        },
+        {
+            "category": "Potassium",
+            "name": "Serum",
+            "value": 3.4,
+            "unit": "mmol/l",
+            "referenceRange": "3.5-5.1"
+        },
+        {
+            "category": "Chloride",
+            "name": "Serum",
+            "value": 104.0,
+            "unit": "mmol/L",
+            "referenceRange": "98-107"
+        },
+        {
+            "category": "Ionised Calcium",
+            "name": "Serum",
+            "value": 1.24,
+            "unit": "mmol/l",
+            "referenceRange": "Adult: 1.15-1.35, Neonates: 1.10-1.40"
+        }
+    ],
+    "message": "Data extraction completed"
+}

@@ -1,0 +1,111 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "extractedparameters": {
+        "Patient Information": {
+            "Name": "Jane Smith",
+            "Age": 50,
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "Complete Blood Count": {
+                "Haemoglobin": {
+                    "Value": 10.8,
+                    "Reference Range": "N/A",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": 3.71,
+                    "Reference Range": "N/A",
+                    "Unit": "mil/cmm"
+                },
+                "WBC Total Count": {
+                    "Value": 2920,
+                    "Reference Range": "N/A",
+                    "Unit": "/emm"
+                },
+                "Platelet Count": {
+                    "Value": 62000,
+                    "Reference Range": "N/A",
+                    "Unit": "/emm"
+                }
+            },
+            "Electrolytes": {
+                "Sodium": {
+                    "Value": 133,
+                    "Reference Range": "N/A",
+                    "Unit": "mmol/|"
+                },
+                "Potassium": {
+                    "Value": 3.6,
+                    "Reference Range": "N/A",
+                    "Unit": "mmol/|"
+                },
+                "Chloride": {
+                    "Value": 98,
+                    "Reference Range": "N/A",
+                    "Unit": "mmol/|"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [],
+        "Doctor's Notes": []
+    },
+    "parameters": [
+        {
+            "category": "Complete Blood Count",
+            "name": "Haemoglobin",
+            "value": 10.8,
+            "unit": "g/dL",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Complete Blood Count",
+            "name": "RBC",
+            "value": 3.71,
+            "unit": "mil/cmm",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Complete Blood Count",
+            "name": "WBC Total Count",
+            "value": 2920.0,
+            "unit": "/emm",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Complete Blood Count",
+            "name": "Platelet Count",
+            "value": 62000.0,
+            "unit": "/emm",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Electrolytes",
+            "name": "Sodium",
+            "value": 133.0,
+            "unit": "mmol/|",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Electrolytes",
+            "name": "Potassium",
+            "value": 3.6,
+            "unit": "mmol/|",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Electrolytes",
+            "name": "Chloride",
+            "value": 98.0,
+            "unit": "mmol/|",
+            "referenceRange": "N/A"
+        }
+    ],
+    "message": "Data extraction completed"
+}

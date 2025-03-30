@@ -1,0 +1,30 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "extractedparameters": {
+        "Patient Information": {
+            "Name": "John Doe"
+        },
+        "Medical Parameters": {
+            "Haemoglobin": {
+                "Value": 14.2,
+                "Reference Range": "N/A",
+                "Unit": "g/dL"
+            },
+            "Platelet Count": {
+                "Value": 250000,
+                "Reference Range": "N/A",
+                "Unit": "/emm"
+            }
+        },
+        "Doctor\u2019s Notes": [],
+        "Doctor's Notes": []
+    },
+    "parameters": [],
+    "message": "Data extraction completed"
+}

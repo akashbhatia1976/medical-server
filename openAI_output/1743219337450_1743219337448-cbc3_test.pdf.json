@@ -1,0 +1,111 @@
+{
+    "success": true,
+    "categories": [
+        "Patient Information",
+        "Medical Parameters",
+        "Doctor\u2019s Notes",
+        "Doctor's Notes"
+    ],
+    "extractedparameters": {
+        "Patient Information": {
+            "Name": "Emily Carter",
+            "Age": 38,
+            "Gender": "Female"
+        },
+        "Medical Parameters": {
+            "Complete Blood Count": {
+                "Haemoglobin": {
+                    "Value": 10.3,
+                    "Reference Range": "N/A",
+                    "Unit": "g/dL"
+                },
+                "RBC": {
+                    "Value": 3.52,
+                    "Reference Range": "N/A",
+                    "Unit": "mil/cmm"
+                },
+                "WBC Total Count": {
+                    "Value": 2630,
+                    "Reference Range": "N/A",
+                    "Unit": "/emm"
+                },
+                "Platelet Count": {
+                    "Value": 53000,
+                    "Reference Range": "N/A",
+                    "Unit": "/emm"
+                }
+            },
+            "Kidney Function Tests": {
+                "Blood Urea": {
+                    "Value": 40.7,
+                    "Reference Range": "N/A",
+                    "Unit": "mg/dl"
+                },
+                "Creatinine": {
+                    "Value": 1.17,
+                    "Reference Range": "N/A",
+                    "Unit": "mg/dl"
+                },
+                "eGFR": {
+                    "Value": 48,
+                    "Reference Range": "N/A",
+                    "Unit": "(ml/min/1.73sqm)"
+                }
+            }
+        },
+        "Doctor\u2019s Notes": [],
+        "Doctor's Notes": []
+    },
+    "parameters": [
+        {
+            "category": "Complete Blood Count",
+            "name": "Haemoglobin",
+            "value": 10.3,
+            "unit": "g/dL",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Complete Blood Count",
+            "name": "RBC",
+            "value": 3.52,
+            "unit": "mil/cmm",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Complete Blood Count",
+            "name": "WBC Total Count",
+            "value": 2630.0,
+            "unit": "/emm",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Complete Blood Count",
+            "name": "Platelet Count",
+            "value": 53000.0,
+            "unit": "/emm",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "Blood Urea",
+            "value": 40.7,
+            "unit": "mg/dl",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "Creatinine",
+            "value": 1.17,
+            "unit": "mg/dl",
+            "referenceRange": "N/A"
+        },
+        {
+            "category": "Kidney Function Tests",
+            "name": "eGFR",
+            "value": 48.0,
+            "unit": "(ml/min/1.73sqm)",
+            "referenceRange": "N/A"
+        }
+    ],
+    "message": "Data extraction completed"
+}
