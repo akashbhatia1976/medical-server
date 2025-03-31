@@ -22,37 +22,38 @@ const transporter = nodemailer.createTransport({
 
 // ✅ Share a Report with a User
 router.post("/share-report", async (req, res) => {
-
   const {
     ownerId,
     sharedWith,
     reportId,
     permissionType,
     recipientPhone,
-    relationshipType = "Friend/Family" // Default
+    relationshipType = "Friend/Family", // Default
   } = req.body;
-    
-  const trimmedSharedWith = (sharedWith || "").trim();
-    
-    console.log("📩 Incoming Share Request:", {
+
+  // ✅ Normalize & trim sharedWith value
+  const trimmedSharedWith = (sharedWith || "").trim().toLowerCase();
+
+  console.log("📩 Incoming Share Request:", {
+    ownerId,
+    sharedWith,
+    trimmedSharedWith,
+    reportId,
+    permissionType,
+    recipientPhone,
+    relationshipType,
+  });
+
+  // ✅ Validate required fields
+  if (!ownerId || !trimmedSharedWith || !reportId || !permissionType) {
+    console.warn("❌ Missing required fields:", {
       ownerId,
-      sharedWith,
       trimmedSharedWith,
       reportId,
       permissionType,
-      recipientPhone,
-      relationshipType,
     });
-
-  if (!ownerId || !trimmedSharedWith || !reportId || !permissionType) {
-      console.warn("❌ Missing required fields:", {
-          ownerId,
-          trimmedSharedWith,
-          reportId,
-          permissionType,
-        });
     return res.status(400).json({ error: "Missing required fields." });
-    }
+  }
 
   try {
     const db = getDB();
@@ -65,21 +66,24 @@ router.post("/share-report", async (req, res) => {
     let sharedWithEmail = null;
 
     const existingUser = await usersCollection.findOne({
-        $or: [{ userId: trimmedSharedWith }, { email: trimmedSharedWith }],
-      });
-      console.log("🔍 existingUser:", existingUser);
+      $or: [
+        { userId: trimmedSharedWith },
+        { email: trimmedSharedWith },
+      ],
+    });
+    console.log("🔍 existingUser:", existingUser);
 
     if (existingUser) {
       sharedWithId = existingUser.userId;
-      sharedWithEmail = existingUser.email;
+      sharedWithEmail = (existingUser.email || "").toLowerCase();
     } else {
       // Not a registered user — use email if it's an email, else store as-is
-        if (trimmedSharedWith.includes("@")) {
-            sharedWithEmail = trimmedSharedWith;
-          } else {
-            sharedWithId = trimmedSharedWith;
-          }
-        }
+      if (trimmedSharedWith.includes("@")) {
+        sharedWithEmail = trimmedSharedWith;
+      } else {
+        sharedWithId = trimmedSharedWith;
+      }
+    }
 
     // ✅ Prevent duplicate shares
     const existingShare = await sharedCollection.findOne({
@@ -133,113 +137,114 @@ router.post("/share-report", async (req, res) => {
     }
 
     // ✅ Emit In-App Notification
-    io.emit("report-shared", { ownerId, sharedWithId, sharedWithEmail, reportId, permissionType });
+    io.emit("report-shared", {
+      ownerId,
+      sharedWithId,
+      sharedWithEmail,
+      reportId,
+      permissionType,
+    });
 
-    res.json({ message: "Report shared successfully! Email, SMS & In-App Notification sent." });
+    res.json({
+      message: "Report shared successfully! Email, SMS & In-App Notification sent.",
+    });
   } catch (error) {
     console.error("❌ Error sharing report:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
 
-// ✅ Get Reports Shared WITH User (with full report info)
-router.get("/shared-with/:userId", async (req, res) => {
-  const { userId } = req.params;
+
+/// ✅ Share All Reports with a User
+router.post("/share-all", async (req, res) => {
+  const { ownerId, sharedWith, permissionType = "view", relationshipType = "Friend/Family" } = req.body;
+
+  // ✅ Validate required fields
+  if (!ownerId || !sharedWith || !permissionType) {
+    return res.status(400).json({ error: "Missing required fields." });
+  }
+
+  // ✅ Normalize & lowercase sharedWith
+  const normalizedSharedWith = sharedWith.trim().toLowerCase();
+
   try {
-    const db = getDB();
-    const sharedCollection = db.collection(collectionName);
-    const reportsCollection = db.collection(reportsCollectionName);
+    const db = await getDB();
+    const reports = await db.collection(reportsCollectionName).find({ userId: ownerId }).toArray();
+
+    if (!reports.length) {
+      return res.status(404).json({ error: "No reports found to share." });
+    }
+
+    // ✅ Normalize sharedWith to ID or email
     const usersCollection = db.collection(usersCollectionName);
-    const { ObjectId } = require("mongodb");
+    let sharedWithId = null;
+    let sharedWithEmail = null;
 
-    const user = await usersCollection.findOne({ userId });
-
-    const sharedReports = await sharedCollection.find({
-      $or: [
-        { sharedWithId: userId },
-        ...(user?.email ? [{ sharedWithEmail: user.email }] : []),
-      ],
-    }).toArray();
-
-    if (!sharedReports.length) {
-      return res.status(200).json({ sharedReports: [] });
-    }
-
-    const reportIds = sharedReports.map((share) => share.reportId);
-    const fullReports = await reportsCollection.find({
-      _id: { $in: reportIds.map((id) => new ObjectId(id)) },
-    }).toArray();
-
-    const merged = sharedReports.map((share) => {
-      const full = fullReports.find((r) => r._id.toString() === share.reportId);
-      return {
-        _id: share._id,
-        reportId: share.reportId,
-        ownerId: share.ownerId,
-        permissionType: share.permissionType,
-        sharedAt: share.sharedAt,
-        sharedWithId: share.sharedWithId,
-        sharedWithEmail: share.sharedWithEmail,
-        relationshipType: share.relationshipType || "Unknown",
-        fileName: full?.fileName,
-        name: full?.name,
-        date: full?.date || share.sharedAt,
-        extractedParameters: full?.extractedParameters || {},
-      };
+    const existingUser = await usersCollection.findOne({
+      $or: [{ userId: normalizedSharedWith }, { email: normalizedSharedWith }],
     });
 
-    res.json({ sharedReports: merged });
+    if (existingUser) {
+      sharedWithId = existingUser.userId;
+      sharedWithEmail = (existingUser.email || "").toLowerCase();
+    } else {
+      if (normalizedSharedWith.includes("@")) {
+        sharedWithEmail = normalizedSharedWith;
+      } else {
+        sharedWithId = normalizedSharedWith;
+      }
+    }
+
+    // ✅ Create share records
+    const shareEntries = reports.map(report => ({
+      ownerId,
+      reportId: report._id.toString(),
+      permissionType,
+      relationshipType,
+      sharedWithId,
+      sharedWithEmail,
+      sharedAt: new Date(),
+    }));
+
+    const result = await db.collection(collectionName).insertMany(shareEntries);
+
+    // ✅ Optional Email Notification with summary
+    if (sharedWithEmail) {
+      const sharedReportsList = reports
+        .map(r => `• ${r.name || r.fileName || 'Unnamed Report'} (${new Date(r.date).toDateString()})`)
+        .join('<br>');
+
+      const emailBody = `
+        <p>Hello,</p>
+        <p><strong>${ownerId}</strong> has shared all their medical reports with you on <strong>Aether</strong>.</p>
+        <p>You now have access to <strong>${reports.length}</strong> report${reports.length > 1 ? 's' : ''}, including:</p>
+        <p>${sharedReportsList}</p>
+        <p>To view the reports, please log in or sign up at:<br>
+        <a href="https://myaether.live">https://myaether.live</a></p>
+        <p>If you weren’t expecting this, you can ignore this message.</p>
+        <p>Stay healthy,<br>
+        The Aether Health Team</p>
+      `;
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: sharedWithEmail,
+        subject: "Medical Reports Shared with You",
+        html: emailBody,
+      };
+
+      await transporter.sendMail(mailOptions);
+    }
+
+    console.log(`📤 Shared ${result.insertedCount} reports from ${ownerId} to ${sharedWithEmail || sharedWithId}`);
+    res.json({ message: "All reports shared successfully", sharedCount: result.insertedCount });
+
   } catch (error) {
-    console.error("❌ Error fetching shared-with reports:", error);
-    res.status(500).json({ error: "Internal server error." });
+    console.error("❌ Error sharing all reports:", error);
+    res.status(500).json({ error: "Failed to share all reports" });
   }
 });
 
-// ✅ Get Reports Shared BY User (with full report info)
-router.get("/shared-by/:userId", async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const db = getDB();
-    const sharedCollection = db.collection(collectionName);
-    const reportsCollection = db.collection(reportsCollectionName);
-    const { ObjectId } = require("mongodb");
-
-    const sharedReports = await sharedCollection.find({ ownerId: userId }).toArray();
-
-    if (!sharedReports.length) {
-      return res.status(200).json({ sharedReports: [] });
-    }
-
-    const reportIds = sharedReports.map((r) => r.reportId);
-    const fullReports = await reportsCollection.find({
-      _id: { $in: reportIds.map((id) => new ObjectId(id)) },
-    }).toArray();
-
-    const merged = sharedReports.map((share) => {
-      const full = fullReports.find((r) => r._id.toString() === share.reportId);
-      return {
-        _id: share._id,
-        reportId: share.reportId,
-        permissionType: share.permissionType,
-        relationshipType: share.relationshipType || "Unknown",
-        sharedWithId: share.sharedWithId,
-        sharedWithEmail: share.sharedWithEmail,
-        recipientPhone: share.recipientPhone,
-        sharedAt: share.sharedAt,
-        name: full?.name,
-        fileName: full?.fileName,
-        date: full?.date,
-        extractedParameters: full?.extractedParameters || {},
-        ownerId: userId,
-      };
-    });
-
-    res.json({ sharedReports: merged });
-  } catch (error) {
-    console.error("❌ Error fetching shared-by reports:", error);
-    res.status(500).json({ error: "Internal server error." });
-  }
-});
 
 
 // ✅ Revoke Access
