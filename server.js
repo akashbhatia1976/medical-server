@@ -74,8 +74,13 @@ const aiAnalysisRoutes = require("./routes/aiAnalysisRoutes");
 
 const io = socketIo(server, {
   cors: {
-    origin: "*", // Change this to your frontend URL in production
+    origin: [
+      "https://myaether.live",
+      "https://myaether.vercel.app",
+      "exp://<your-local-ip>:19000", // Optional for mobile dev
+    ],
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -167,7 +172,7 @@ app.get("/test", (req, res) => {
 initializeDatabase().then(() => {
   console.log("🚀 Starting Server...");
   server.listen(PORT, () => {
-    console.log(`✅ Server is running on http://localhost:${PORT}`);
+    console.log(`✅ Server is running on PORT ${PORT}`);
   });
 });
 
