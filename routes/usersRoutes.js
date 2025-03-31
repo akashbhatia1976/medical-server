@@ -49,7 +49,10 @@ router.get("/exists/:userId", async (req, res) => {
 router.post("/register", async (req, res) => {
   const { userId, email, phone, password } = req.body;
 
-  if (!userId || userId.includes(" ") || !password || password.length < 6 || (!email && !phone)) {
+  // ✅ Normalize email to lowercase for consistency
+  const normalizedEmail = email?.toLowerCase().trim();
+
+  if (!userId || userId.includes(" ") || !password || password.length < 6 || (!normalizedEmail && !phone)) {
     return res.status(400).json({ error: "Invalid input. Ensure User ID has no spaces, password is 6+ chars, and provide email/phone." });
   }
 
@@ -61,7 +64,7 @@ router.post("/register", async (req, res) => {
     // ✅ Filter only non-empty conditions
     const orConditions = [];
     if (userId) orConditions.push({ userId });
-    if (email) orConditions.push({ email });
+    if (normalizedEmail) orConditions.push({ email: normalizedEmail });
     if (phone) orConditions.push({ phone });
 
     const existingUser = await collection.findOne({ $or: orConditions });
@@ -72,7 +75,7 @@ router.post("/register", async (req, res) => {
     if (existingUser) {
       const duplicateFields = [];
       if (existingUser.userId === userId) duplicateFields.push("User ID");
-      if (existingUser.email === email) duplicateFields.push("Email");
+      if (existingUser.email === normalizedEmail) duplicateFields.push("Email");
       if (existingUser.phone === phone) duplicateFields.push("Phone");
 
       const msg = duplicateFields.length
@@ -84,13 +87,13 @@ router.post("/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const healthId = generateHealthID();
-    const verificationToken = email ? crypto.randomBytes(32).toString("hex") : null;
+    const verificationToken = normalizedEmail ? crypto.randomBytes(32).toString("hex") : null;
     const phoneVerificationToken = phone ? Math.floor(100000 + Math.random() * 900000).toString() : null;
 
     await collection.insertOne({
       userId,
       healthId,
-      email,
+      email: normalizedEmail,
       phone,
       password: hashedPassword,
       verified: false,
@@ -99,11 +102,11 @@ router.post("/register", async (req, res) => {
       createdAt: new Date(),
     });
 
-    if (email) {
+    if (normalizedEmail) {
       try {
         await transporter.sendMail({
           from: process.env.EMAIL_USER,
-          to: email,
+          to: normalizedEmail,
           subject: "Verify Your Email - Aether",
           text: `Click to verify: ${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`,
         });
@@ -131,7 +134,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-
 // ✅ Verify email
 router.get("/verify-email", async (req, res) => {
   const { token } = req.query;
@@ -158,11 +160,21 @@ router.post("/login", async (req, res) => {
   const { userId, password } = req.body;
   if (!userId || !password) return res.status(400).json({ error: "User ID and password required." });
 
+  // ✅ Normalize login input for case-insensitive email-based login
+  const normalizedUserId = userId.toLowerCase().trim();
+
   try {
     await mongoClient.connect();
     const db = mongoClient.db(dbName);
     const collection = db.collection(usersCollection);
-    const user = await collection.findOne({ userId });
+
+    // ✅ Try finding user by userId OR email (both lowercase)
+    const user = await collection.findOne({
+      $or: [
+        { userId: normalizedUserId },
+        { email: normalizedUserId },
+      ]
+    });
 
     if (!user) return res.status(404).json({ error: "User not found." });
     if (!user.verified) return res.status(403).json({ error: "Email/phone not verified." });
@@ -190,7 +202,17 @@ router.get("/me", authenticateUser, async (req, res) => {
     await mongoClient.connect();
     const db = mongoClient.db(dbName);
     const collection = db.collection(usersCollection);
-    const user = await collection.findOne({ userId: req.user.userId });
+
+    // ✅ Normalize userId from token if it's an email
+    const rawUserId = req.user.userId;
+    const normalizedUserId = rawUserId?.includes("@")
+      ? rawUserId.toLowerCase().trim()
+      : rawUserId?.trim();
+
+    // ✅ Look up by either userId or email
+    const user = await collection.findOne({
+      $or: [{ userId: normalizedUserId }, { email: normalizedUserId }],
+    });
 
     if (!user) return res.status(404).json({ error: "User not found." });
 
@@ -209,7 +231,10 @@ router.get("/me", authenticateUser, async (req, res) => {
 router.post("/reset-password", async (req, res) => {
   const { userId, newPassword } = req.body;
 
-  if (!userId || !newPassword || newPassword.length < 6) {
+  // ✅ Normalize userId if it's an email
+  const normalizedUserId = userId?.includes("@") ? userId.toLowerCase().trim() : userId?.trim();
+
+  if (!normalizedUserId || !newPassword || newPassword.length < 6) {
     return res.status(400).json({ error: "User ID and valid new password required." });
   }
 
@@ -217,12 +242,19 @@ router.post("/reset-password", async (req, res) => {
     await mongoClient.connect();
     const db = mongoClient.db(dbName);
     const collection = db.collection(usersCollection);
-    const user = await collection.findOne({ userId });
+
+    // ✅ Match either by userId or normalized email
+    const user = await collection.findOne({
+      $or: [{ userId: normalizedUserId }, { email: normalizedUserId }],
+    });
 
     if (!user) return res.status(404).json({ error: "User not found." });
 
     const hashed = await bcrypt.hash(newPassword, saltRounds);
-    await collection.updateOne({ userId }, { $set: { password: hashed } });
+    await collection.updateOne(
+      { _id: user._id },
+      { $set: { password: hashed } }
+    );
 
     res.json({ message: "Password reset successful." });
   } catch (err) {
