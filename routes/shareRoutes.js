@@ -22,6 +22,7 @@ const transporter = nodemailer.createTransport({
 
 // ✅ Share a Report with a User
 router.post("/share-report", async (req, res) => {
+
   const {
     ownerId,
     sharedWith,
@@ -32,8 +33,24 @@ router.post("/share-report", async (req, res) => {
   } = req.body;
     
   const trimmedSharedWith = (sharedWith || "").trim();
+    
+    console.log("📩 Incoming Share Request:", {
+      ownerId,
+      sharedWith,
+      trimmedSharedWith,
+      reportId,
+      permissionType,
+      recipientPhone,
+      relationshipType,
+    });
 
   if (!ownerId || !trimmedSharedWith || !reportId || !permissionType) {
+      console.warn("❌ Missing required fields:", {
+          ownerId,
+          trimmedSharedWith,
+          reportId,
+          permissionType,
+        });
     return res.status(400).json({ error: "Missing required fields." });
     }
 
@@ -50,6 +67,7 @@ router.post("/share-report", async (req, res) => {
     const existingUser = await usersCollection.findOne({
         $or: [{ userId: trimmedSharedWith }, { email: trimmedSharedWith }],
       });
+      console.log("🔍 existingUser:", existingUser);
 
     if (existingUser) {
       sharedWithId = existingUser.userId;
