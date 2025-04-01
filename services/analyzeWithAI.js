@@ -29,42 +29,47 @@ const analyzeWithAI = async ({ promptType, parameters, engine = SupportedAIEngin
   }
 };
 
-// ✅ OpenAI Analysis Function
 const analyzeWithOpenAI = async (promptType, parameters) => {
-  if (!parameters || typeof parameters !== 'object' || parameters.length === 0) {
-    return "⚠️ No parameters were provided for analysis. Please upload a report with extracted values.";
-  }
+    if (!Array.isArray(parameters) || parameters.length === 0) {
+      console.error("🚫 Invalid parameters passed to analyzeWithOpenAI:", parameters);
+      throw new TypeError("Expected 'parameters' to be a non-empty array.");
+    }
 
-  const groupedByCategory = {};
-  for (const param of parameters) {
-    const { category, name, value, unit } = param;
-    if (!groupedByCategory[category]) groupedByCategory[category] = [];
-    groupedByCategory[category].push(`${name}: ${value ?? "N/A"} ${unit || ""}`);
-  }
+    const groupedByCategory = {};
+      
+    console.log("🧠 parameters received:", parameters);
 
-  const formattedInput = Object.entries(groupedByCategory)
-    .map(([category, items]) => `\nCategory: ${category}\n${items.join("\n")}`)
-    .join("\n\n");
+    for (const param of parameters) {
+      const { category, name, value, unit } = param;
+      if (!groupedByCategory[category]) groupedByCategory[category] = [];
+      groupedByCategory[category].push(`${name}: ${value ?? "N/A"} ${unit || ""}`);
+    }
 
-  const prompt = `You are a highly skilled medical assistant. Given the following diagnostic test results, provide a clear, structured, and actionable ${promptType} analysis. Focus on potential concerns, patterns, and suggestions for further investigation.\n\n${formattedInput}`;
+    const formattedInput = Object.entries(groupedByCategory)
+      .map(([category, items]) => `\nCategory: ${category}\n${items.join("\n")}`)
+      .join("\n\n");
 
-  console.log("🧠 Prompt sent to AI:\n", prompt);
+    const prompt = `You are a highly skilled medical assistant. Given the following diagnostic test results, provide a clear, structured, and actionable ${promptType} analysis. Focus on potential concerns, patterns, and suggestions for further investigation.\n\n${formattedInput}`;
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o",
-    messages: [
-      { role: "system", content: "You are a helpful and knowledgeable medical assistant." },
-      { role: "user", content: prompt },
-    ],
-    temperature: 0.7,
-  });
+    console.log("🧠 Prompt sent to AI:\n", prompt);
 
-  const result = completion.choices[0]?.message?.content?.trim() || "⚠️ No analysis returned.";
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: "You are a helpful and knowledgeable medical assistant." },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0.7,
+    });
 
-  console.log("📨 AI response received:\n", result);
+    const result = completion.choices[0]?.message?.content?.trim() || "⚠️ No analysis returned.";
 
-  return result;
-};
+    console.log("📨 AI response received:\n", result);
+
+    return result;
+  };
+
+
 
 module.exports = {
   analyzeWithAI,

@@ -41,7 +41,7 @@ app.use(
 
       console.log("🛂 CORS Origin received:", origin);
 
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin) || origin === 'null') {
         console.log("🟢 CORS allowed for origin:", origin);
         return callback(null, true);
       }
@@ -74,11 +74,23 @@ const aiAnalysisRoutes = require("./routes/aiAnalysisRoutes");
 
 const io = socketIo(server, {
   cors: {
-    origin: [
-      "https://myaether.live",
-      "https://myaether.vercel.app",
-      "exp://<your-local-ip>:19000", // Optional for mobile dev
-    ],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "https://myaether.live",
+        "https://myaether.vercel.app",
+        "exp://<your-local-ip>:19000", // Optional: your Expo local dev URL
+      ];
+
+      console.log("🔌 Socket.io CORS origin received:", origin);
+
+      if (!origin || allowedOrigins.includes(origin) || origin === "null") {
+        console.log("✅ Socket.io CORS allowed for origin:", origin);
+        return callback(null, true);
+      }
+
+      console.warn("❌ Socket.io CORS blocked for origin:", origin);
+      return callback(new Error("Not allowed by CORS (Socket.io)"));
+    },
     methods: ["GET", "POST"],
     credentials: true,
   },
