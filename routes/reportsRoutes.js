@@ -140,6 +140,44 @@ router.get("/:userId", authenticateUser, async (req, res) => {
   }
 });
 
+// Add this new endpoint to your reportRoutes.js file
+
+// ✅ SECURED: Fetch all reports with extracted parameters for timeline
+router.get("/:userId/withParameters", authenticateUser, async (req, res) => {
+  const requestedUserId = req.params.userId;
+  const authenticatedUserId = req.user?.userId;
+
+  console.log("🔐 Authenticated user:", authenticatedUserId);
+  console.log("📥 Requested timeline data for:", requestedUserId);
+
+  if (requestedUserId !== authenticatedUserId) {
+    console.warn(`🚫 Unauthorized access attempt by ${authenticatedUserId} for ${requestedUserId}`);
+    return res.status(403).json({ error: "Access denied." });
+  }
+
+  try {
+    await mongoClient.connect();
+    const db = mongoClient.db(dbName);
+
+    const reports = await db.collection(reportsCollection)
+      .find({ userId: requestedUserId })
+      .project({
+        _id: 1,
+        reportId: 1,
+        fileName: 1,
+        date: 1,
+        extractedParameters: 1
+      })
+      .toArray();
+
+    console.log(`📊 Returning ${reports.length} reports with parameters for timeline`);
+    res.json(reports);
+  } catch (error) {
+    console.error("❌ Error fetching timeline data:", error);
+    res.status(500).json({ error: "Failed to retrieve timeline data." });
+  }
+});
+
 
 module.exports = router;
 
