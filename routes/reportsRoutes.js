@@ -170,8 +170,14 @@ router.get("/:userId/withParameters", authenticateUser, async (req, res) => {
       })
       .toArray();
 
+      // ✨ Convert ObjectIds to string before sending
+      const formattedReports = reports.map(report => ({
+        ...report,
+        _id: report._id.toString()
+      }));
+      
     console.log(`📊 Returning ${reports.length} reports with parameters for timeline`);
-    res.json(reports);
+   res.json(formattedReports);
   } catch (error) {
     console.error("❌ Error fetching timeline data:", error);
     res.status(500).json({ error: "Failed to retrieve timeline data." });
