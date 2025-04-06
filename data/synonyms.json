@@ -67,9 +67,7 @@
   },
   "Vitamin B12": {
     "Vitamin B12": ["vitamin b", "Vitamin B", "Vitamin-B12", "vitamin b12", "vitamin b-12"]
-  }
-  
-  
+  },
   "Urine Examination": {
     "Reaction": ["reaction", "Reaction (ph)", "reaction (pH)", "reaction pH", , "Reaction (pH)"],
     "Specific Gravity": ["specific gravity", "Specific Gravity", "Specific gravity"],
@@ -78,10 +76,7 @@
     "Urine Red Blood Cells": ["Red Blood Cells /hpf", "red blood cells /hpf", "Red blood cells /hpf"]
   }
   
-  
-  
-  
-  
+ 
   
 }
 
