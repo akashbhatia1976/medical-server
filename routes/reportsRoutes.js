@@ -170,20 +170,28 @@ router.get("/:userId/withParameters", authenticateUser, async (req, res) => {
       })
       .toArray();
 
-      // ✨ Convert ObjectIds to string before sending
-      const formattedReports = reports.map(report => ({
-        ...report,
-        _id: report._id.toString()
-      }));
-      
-    console.log(`📊 Returning ${reports.length} reports with parameters for timeline`);
-   res.json(formattedReports);
+    // ✨ Normalize _id and value
+    const formattedReports = reports.map(report => ({
+      ...report,
+      _id: report._id?.toString?.() || report._id,
+      extractedParameters: Array.isArray(report.extractedParameters)
+        ? report.extractedParameters.map(p => ({
+            ...p,
+            value:
+              typeof p.value === 'object' && p.value.$numberDouble
+                ? parseFloat(p.value.$numberDouble)
+                : p.value
+          }))
+        : report.extractedParameters
+    }));
+
+    console.log(`📊 Returning ${formattedReports.length} reports with parameters for timeline`);
+    res.json(formattedReports);
   } catch (error) {
     console.error("❌ Error fetching timeline data:", error);
     res.status(500).json({ error: "Failed to retrieve timeline data." });
   }
 });
-
 
 module.exports = router;
 
