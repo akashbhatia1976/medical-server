@@ -142,6 +142,8 @@ router.get("/:userId", authenticateUser, async (req, res) => {
 
 // Add this new endpoint to your reportRoutes.js file
 
+
+
 // ✅ SECURED: Fetch all reports with extracted parameters for timeline
 router.get("/:userId/withParameters", authenticateUser, async (req, res) => {
   const requestedUserId = req.params.userId;
@@ -159,39 +161,45 @@ router.get("/:userId/withParameters", authenticateUser, async (req, res) => {
     await mongoClient.connect();
     const db = mongoClient.db(dbName);
 
+    // Get all reports for the user
     const reports = await db.collection(reportsCollection)
       .find({ userId: requestedUserId })
-      .project({
-        _id: 1,
-        reportId: 1,
-        fileName: 1,
-        date: 1,
-        extractedParameters: 1
-      })
+      .project({ _id: 1, fileName: 1, date: 1 }) // Just get the basic fields first
       .toArray();
 
-    // ✨ Normalize _id and value
-    const formattedReports = reports.map(report => ({
-      ...report,
-      _id: report._id?.toString?.() || report._id,
-      extractedParameters: Array.isArray(report.extractedParameters)
-        ? report.extractedParameters.map(p => ({
-            ...p,
-            value:
-              typeof p.value === 'object' && p.value.$numberDouble
-                ? parseFloat(p.value.$numberDouble)
-                : p.value
-          }))
-        : report.extractedParameters
-    }));
+    console.log(`Found ${reports.length} reports for user ${requestedUserId}`);
+    
+    // Fetch detailed reports one by one to get parameters
+    const reportsWithParameters = [];
+    
+    for (const report of reports) {
+      try {
+        const detailedReport = await db.collection(reportsCollection).findOne({
+          _id: report._id
+        });
+        
+        if (detailedReport && detailedReport.extractedParameters) {
+          // Create a new object with stringified _id to avoid MongoDB object issues
+          reportsWithParameters.push({
+            _id: detailedReport._id.toString(),
+            reportId: detailedReport._id.toString(), // Add reportId for consistency
+            fileName: detailedReport.fileName || "Unnamed Report",
+            date: detailedReport.date,
+            extractedParameters: detailedReport.extractedParameters
+          });
+        }
+      } catch (err) {
+        console.error(`Error processing report ${report._id}:`, err);
+        // Continue with other reports
+      }
+    }
 
-    console.log(`📊 Returning ${formattedReports.length} reports with parameters for timeline`);
-    res.json(formattedReports);
+    console.log(`📊 Returning ${reportsWithParameters.length} reports with parameters for timeline`);
+    res.json(reportsWithParameters);
   } catch (error) {
     console.error("❌ Error fetching timeline data:", error);
     res.status(500).json({ error: "Failed to retrieve timeline data." });
   }
 });
-
 module.exports = router;
 
