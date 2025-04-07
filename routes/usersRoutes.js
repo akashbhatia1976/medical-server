@@ -104,12 +104,55 @@ router.post("/register", async (req, res) => {
 
     if (normalizedEmail) {
       try {
-        await transporter.sendMail({
-          from: process.env.EMAIL_USER,
-          to: normalizedEmail,
-          subject: "Verify Your Email - Aether",
-          text: `Click to verify: ${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`,
-        });
+       const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+
+await transporter.sendMail({
+  from: `"Aether Health" <${process.env.EMAIL_USER}>`,
+  to: normalizedEmail,
+  subject: "Verify Your Email - Aether Health",
+  text: `
+Welcome to Aether Health!
+
+Thank you for registering with Aether Health. To complete your registration and access your account, please verify your email address by clicking on the following link:
+
+${verificationLink}
+
+If you didn't create an account with Aether Health, you can safely ignore this email.
+
+© ${new Date().getFullYear()} Aether Health. All rights reserved.
+`,
+  html: `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="color: #0D9488; margin-bottom: 5px;">Aether Health</h1>
+        <p style="color: #4b5563; font-size: 16px;">Your personal health records assistant</p>
+      </div>
+      
+      <h2 style="color: #1F2937; text-align: center; margin-bottom: 20px;">Verify Your Email Address</h2>
+      
+      <p style="color: #4b5563; font-size: 16px; line-height: 1.5; margin-bottom: 25px;">
+        Thank you for registering with Aether Health! To complete your registration and access your account, please verify your email address by clicking the button below.
+      </p>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${verificationLink}" style="background-color: #0D9488; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block; font-size: 16px;">Verify Email Address</a>
+      </div>
+      
+      <p style="color: #4b5563; font-size: 14px; margin-bottom: 10px;">
+        If the button above doesn't work, copy and paste the following link into your browser:
+      </p>
+      
+      <p style="background-color: #f3f4f6; padding: 10px; border-radius: 4px; word-break: break-all; font-size: 14px;">
+        ${verificationLink}
+      </p>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #6b7280; font-size: 14px;">
+        <p>If you didn't create an account with Aether Health, you can safely ignore this email.</p>
+        <p>&copy; ${new Date().getFullYear()} Aether Health. All rights reserved.</p>
+      </div>
+    </div>
+  `
+});
       } catch (err) {
         console.warn("⚠️ Email not sent:", err.message);
       }
