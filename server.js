@@ -71,6 +71,7 @@ const usersRoutes = require("./routes/usersRoutes");
 const reportsRoutes = require("./routes/reportsRoutes");
 const shareRoutes = require("./routes/shareRoutes"); // ✅ Import the sharing routes
 const aiAnalysisRoutes = require("./routes/aiAnalysisRoutes");
+const confidenceScoreRoutes = require("./routes/confidenceScoreRoutes");
 
 const io = socketIo(server, {
   cors: {
@@ -150,7 +151,8 @@ const registeredRoutes = [
   { path: "/api/users", handler: usersRoutes },
   { path: "/api/reports", handler: reportsRoutes },
   { path: "/api/share", handler: shareRoutes }, // ✅ New share functionality
-  { path: "/api/ai-analysis", handler: aiAnalysisRoutes}
+  { path: "/api/ai-analysis", handler: aiAnalysisRoutes},
+  { path: "/api/confidence-scores", handler: confidenceScoreRoutes }
 ];
 
 registeredRoutes.forEach(({ path, handler }) => {
