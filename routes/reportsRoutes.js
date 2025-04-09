@@ -10,6 +10,69 @@ const usersCollection = "users";
 const reportsCollection = "reports";
 const sharedReportsCollection = "shared_reports";
 
+
+
+
+
+// ✅ SECURED: Fetch all reports with extracted parameters for timeline
+router.get("/:userId/withParameters", authenticateUser, async (req, res) => {
+  const requestedUserId = req.params.userId;
+  const authenticatedUserId = req.user?.userId;
+
+  console.log("🔐 Authenticated user:", authenticatedUserId);
+  console.log("📥 Requested timeline data for:", requestedUserId);
+
+  if (requestedUserId !== authenticatedUserId) {
+    console.warn(`🚫 Unauthorized access attempt by ${authenticatedUserId} for ${requestedUserId}`);
+    return res.status(403).json({ error: "Access denied." });
+  }
+
+  try {
+    await mongoClient.connect();
+    const db = mongoClient.db(dbName);
+
+    // Get all reports for the user
+    const reports = await db.collection(reportsCollection)
+      .find({ userId: requestedUserId })
+      .project({ _id: 1, fileName: 1, date: 1 }) // Just get the basic fields first
+      .toArray();
+
+    console.log(`Found ${reports.length} reports for user ${requestedUserId}`);
+    
+    // Fetch detailed reports one by one to get parameters
+    const reportsWithParameters = [];
+    
+    for (const report of reports) {
+      try {
+        const detailedReport = await db.collection(reportsCollection).findOne({
+          _id: report._id
+        });
+        
+        if (detailedReport && detailedReport.extractedParameters) {
+          // Create a new object with stringified _id to avoid MongoDB object issues
+          reportsWithParameters.push({
+            _id: detailedReport._id.toString(),
+            reportId: detailedReport._id.toString(), // Add reportId for consistency
+            fileName: detailedReport.fileName || "Unnamed Report",
+            date: detailedReport.date,
+            extractedParameters: detailedReport.extractedParameters
+          });
+        }
+      } catch (err) {
+        console.error(`Error processing report ${report._id}:`, err);
+        // Continue with other reports
+      }
+    }
+
+    console.log(`📊 Returning ${reportsWithParameters.length} reports with parameters for timeline`);
+    res.json(reportsWithParameters);
+  } catch (error) {
+    console.error("❌ Error fetching timeline data:", error);
+    res.status(500).json({ error: "Failed to retrieve timeline data." });
+  }
+});
+
+
 // ✅ SECURED: Fetch a specific report for a user (owner or shared)
 router.get("/:userId/:reportId", authenticateUser, async (req, res) => {
   const { reportId } = req.params;
@@ -144,62 +207,6 @@ router.get("/:userId", authenticateUser, async (req, res) => {
 
 
 
-// ✅ SECURED: Fetch all reports with extracted parameters for timeline
-router.get("/:userId/withParameters", authenticateUser, async (req, res) => {
-  const requestedUserId = req.params.userId;
-  const authenticatedUserId = req.user?.userId;
 
-  console.log("🔐 Authenticated user:", authenticatedUserId);
-  console.log("📥 Requested timeline data for:", requestedUserId);
-
-  if (requestedUserId !== authenticatedUserId) {
-    console.warn(`🚫 Unauthorized access attempt by ${authenticatedUserId} for ${requestedUserId}`);
-    return res.status(403).json({ error: "Access denied." });
-  }
-
-  try {
-    await mongoClient.connect();
-    const db = mongoClient.db(dbName);
-
-    // Get all reports for the user
-    const reports = await db.collection(reportsCollection)
-      .find({ userId: requestedUserId })
-      .project({ _id: 1, fileName: 1, date: 1 }) // Just get the basic fields first
-      .toArray();
-
-    console.log(`Found ${reports.length} reports for user ${requestedUserId}`);
-    
-    // Fetch detailed reports one by one to get parameters
-    const reportsWithParameters = [];
-    
-    for (const report of reports) {
-      try {
-        const detailedReport = await db.collection(reportsCollection).findOne({
-          _id: report._id
-        });
-        
-        if (detailedReport && detailedReport.extractedParameters) {
-          // Create a new object with stringified _id to avoid MongoDB object issues
-          reportsWithParameters.push({
-            _id: detailedReport._id.toString(),
-            reportId: detailedReport._id.toString(), // Add reportId for consistency
-            fileName: detailedReport.fileName || "Unnamed Report",
-            date: detailedReport.date,
-            extractedParameters: detailedReport.extractedParameters
-          });
-        }
-      } catch (err) {
-        console.error(`Error processing report ${report._id}:`, err);
-        // Continue with other reports
-      }
-    }
-
-    console.log(`📊 Returning ${reportsWithParameters.length} reports with parameters for timeline`);
-    res.json(reportsWithParameters);
-  } catch (error) {
-    console.error("❌ Error fetching timeline data:", error);
-    res.status(500).json({ error: "Failed to retrieve timeline data." });
-  }
-});
 module.exports = router;
 
