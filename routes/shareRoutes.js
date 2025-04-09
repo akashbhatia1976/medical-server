@@ -3,6 +3,7 @@ const { getDB } = require("../db");
 const nodemailer = require("nodemailer");
 const sendSMS = require("../services/smsService");
 require("dotenv").config();
+const authenticateUser = require("../middleware/authenticateUser");
 
 const router = express.Router();
 const collectionName = "shared_reports";
@@ -21,7 +22,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // ✅ Share a Report with a User
-router.post("/share-report", async (req, res) => {
+router.post("/share-report", authenticateUser, async (req, res) => {
   const {
     ownerId,
     sharedWith,
@@ -156,7 +157,7 @@ router.post("/share-report", async (req, res) => {
 
 
 /// ✅ Share All Reports with a User
-router.post("/share-all", async (req, res) => {
+router.post("/share-all", authenticateUser, async (req, res) => {
   const { ownerId, sharedWith, permissionType = "view", relationshipType = "Friend/Family" } = req.body;
 
   // ✅ Validate required fields
@@ -248,7 +249,7 @@ router.post("/share-all", async (req, res) => {
 
 
 // ✅ Revoke Access
-router.post("/revoke", async (req, res) => {
+router.post("/revoke", authenticateUser, async (req, res) => {
   const { ownerId, reportId, sharedWithId, sharedWithEmail } = req.body;
 
   if (!ownerId || !reportId || (!sharedWithId && !sharedWithEmail)) {
@@ -282,7 +283,7 @@ router.post("/revoke", async (req, res) => {
 });
 
 // ✅ Share All Reports with a User
-router.post("/share-all", async (req, res) => {
+router.post("/share-all", authenticateUser, async (req, res) => {
   const { ownerId, sharedWith, permissionType = "view", relationshipType = "Friend/Family" } = req.body;
 
   if (!ownerId || !sharedWith || !permissionType) {
