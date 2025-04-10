@@ -368,6 +368,37 @@ router.post("/share-all", authenticateUser, async (req, res) => {
   }
 });
 
+// ✅ Get reports shared BY the user
+router.get("/shared-by/:userId", authenticateUser, async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const db = getDB();
+    const sharedReports = await db.collection(collectionName)
+      .find({ ownerId: userId })
+      .toArray();
+    res.json(sharedReports);
+  } catch (error) {
+    console.error("❌ Error fetching shared-by reports:", error);
+    res.status(500).json({ error: "Failed to fetch shared-by reports" });
+  }
+});
+
+// ✅ Get reports shared WITH the user
+router.get("/shared-with/:userId", authenticateUser, async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const db = getDB();
+    const sharedReports = await db.collection(collectionName)
+      .find({ $or: [{ sharedWithId: userId }] })
+      .toArray();
+    res.json(sharedReports);
+  } catch (error) {
+    console.error("❌ Error fetching shared-with reports:", error);
+    res.status(500).json({ error: "Failed to fetch shared-with reports" });
+  }
+});
+
+
 
 module.exports = router;
 
