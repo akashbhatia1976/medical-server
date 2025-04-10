@@ -21,6 +21,8 @@ const { connectDB: connectCustomDB } = require('./db.js');
 const app = express();
 const server = http.createServer(app);
 
+app.set('trust proxy', true); // ✅ TRUST PROXIES
+
 // Log all incoming headers for debugging
 app.use((req, res, next) => {
   console.log("🛂 Incoming Request:", req.method, req.originalUrl);
