@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const authenticateUser = (req, res, next) => {
-  const authHeader = req.headers.authorization || req.headers.Authorization req.headers["x-auth-token"];
+  const authHeader = req.headers.authorization || req.headers.Authorization || req.headers["x-auth-token"];
   console.log("🔐 Incoming Auth Header:", authHeader); // Add for debugging
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
