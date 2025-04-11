@@ -87,14 +87,23 @@ router.post("/share-report", authenticateUser, async (req, res) => {
     }
 
     // ✅ Prevent duplicate shares
-    const existingShare = await sharedCollection.findOne({
-      ownerId,
-      reportId,
-      $or: [
-        { sharedWithId: sharedWithId || null },
-        { sharedWithEmail: sharedWithEmail || null },
-      ],
-    });
+      
+      const shareCheckConditions = [];
+
+      if (sharedWithId) {
+        shareCheckConditions.push({ sharedWithId });
+      }
+      if (sharedWithEmail) {
+        shareCheckConditions.push({ sharedWithEmail });
+      }
+
+      const existingShare = await sharedCollection.findOne({
+        ownerId,
+        reportId,
+        $or: shareCheckConditions,
+      });
+
+    
 
     if (existingShare) {
       return res.status(400).json({ error: "Report already shared with this user." });
@@ -282,9 +291,11 @@ router.post("/revoke", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ Share All Reports with a User
+/*/ ✅ Share All Reports with a User
 router.post("/share-all", authenticateUser, async (req, res) => {
   const { ownerId, sharedWith, permissionType = "view", relationshipType = "Friend/Family" } = req.body;
+
+
 
   if (!ownerId || !sharedWith || !permissionType) {
     return res.status(400).json({ error: "Missing required fields." });
@@ -368,6 +379,7 @@ router.post("/share-all", authenticateUser, async (req, res) => {
   }
 });
 
+*/
 // ✅ Get reports shared BY the user
 router.get("/shared-by/:userId", authenticateUser, async (req, res) => {
   const { userId } = req.params;
