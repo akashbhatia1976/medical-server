@@ -2,6 +2,8 @@
 const express = require("express");
 const { getDB } = require("../db");
 const authenticateUser = require("../middleware/authenticateUser");
+const { ObjectId } = require("mongodb");
+
 
 const router = express.Router();
 const collectionName = "notifications";
@@ -64,7 +66,7 @@ router.post("/mark-seen", authenticateUser, async (req, res) => {
   try {
     const db = getDB();
     const result = await db.collection(collectionName).updateOne(
-      { _id: new require("mongodb").ObjectId(notificationId) },
+    { _id: new ObjectId(notificationId) }, // ✅ use ObjectId here
       { $set: { seen: true } }
     );
 
