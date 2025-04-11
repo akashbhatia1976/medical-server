@@ -23,7 +23,7 @@ router.post("/", authenticateUser, async (req, res) => {
       type,
       message,
       reportId: reportId || null,
-      read: false,
+      seen: false,
       createdAt: new Date(),
     };
 
@@ -54,7 +54,7 @@ router.get("/:userId", authenticateUser, async (req, res) => {
 });
 
 // ✅ Mark a notification as read
-router.put("/mark-read", authenticateUser, async (req, res) => {
+router.put("/mark-seen", authenticateUser, async (req, res) => {
   const { notificationId } = req.body;
 
   if (!notificationId) {
@@ -65,17 +65,17 @@ router.put("/mark-read", authenticateUser, async (req, res) => {
     const db = getDB();
     const result = await db.collection(collectionName).updateOne(
       { _id: new require("mongodb").ObjectId(notificationId) },
-      { $set: { read: true } }
+      { $set: { seen: true } }
     );
 
     if (result.modifiedCount === 0) {
-      return res.status(404).json({ error: "Notification not found or already read." });
+      return res.status(404).json({ error: "Notification not found or already seen." });
     }
 
-    res.json({ message: "Notification marked as read." });
+    res.json({ message: "Notification marked as seen." });
   } catch (error) {
-    console.error("❌ Error marking notification as read:", error);
-    res.status(500).json({ error: "Failed to mark notification as read." });
+    console.error("❌ Error marking notification as seen:", error);
+    res.status(500).json({ error: "Failed to mark notification as seen." });
   }
 });
 
