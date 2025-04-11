@@ -17,6 +17,8 @@ const { connectDB: connectCustomDB } = require('./db.js');
 
 
 
+
+
 // ✅ Initialize Express App FIRST
 const app = express();
 const server = http.createServer(app);
@@ -76,6 +78,7 @@ const reportsRoutes = require("./routes/reportsRoutes");
 const shareRoutes = require("./routes/shareRoutes"); // ✅ Import the sharing routes
 const aiAnalysisRoutes = require("./routes/aiAnalysisRoutes");
 const confidenceScoreRoutes = require("./routes/confidenceScoreRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 const io = socketIo(server, {
   cors: {
@@ -156,7 +159,9 @@ const registeredRoutes = [
   { path: "/api/reports", handler: reportsRoutes },
   { path: "/api/share", handler: shareRoutes }, // ✅ New share functionality
   { path: "/api/ai-analysis", handler: aiAnalysisRoutes},
-  { path: "/api/confidence-scores", handler: confidenceScoreRoutes }
+  { path: "/api/confidence-scores", handler: confidenceScoreRoutes },
+  { path: "/api/notifications", handler: notificationRoutes },
+
 ];
 
 registeredRoutes.forEach(({ path, handler }) => {
