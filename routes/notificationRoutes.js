@@ -54,7 +54,7 @@ router.get("/:userId", authenticateUser, async (req, res) => {
 });
 
 // ✅ Mark a notification as read
-router.put("/mark-seen", authenticateUser, async (req, res) => {
+router.post("/mark-seen", authenticateUser, async (req, res) => {
   const { notificationId } = req.body;
 
   if (!notificationId) {
